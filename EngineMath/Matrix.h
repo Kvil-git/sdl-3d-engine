@@ -10,65 +10,65 @@ template <typename ElementType, size_t Dimensions> struct Vector;
 
 template <typename ElementType, size_t Rows, size_t Columns>
 struct Matrix {
-    using MatrixNxN = Matrix<ElementType, Rows, Columns>;
+    using MatrixNxM = Matrix<ElementType, Rows, Columns>;
     ElementType elements[Rows * Columns];
 
     // matrix addition
-    MatrixNxN operator+(const MatrixNxN &other) {
+    MatrixNxM operator+(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix addition is not defined for zero-dimensional matrices.");
-        MatrixNxN temp;
+        MatrixNxM temp;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] = elements[i] + other.elements[i];
         return temp;
     }
 
     // addition with assignment
-    void operator+=(const MatrixNxN &other) {
+    void operator+=(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix addition is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] += other.elements[i];
     }
 
     // matrix subtraction
-    MatrixNxN operator-(const MatrixNxN &other) {
+    MatrixNxM operator-(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix subtraction is not defined for zero-dimensional matrices.");
-        MatrixNxN temp;
+        MatrixNxM temp;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] = elements[i] - other.elements[i];
         return temp;
     }
 
     // subtraction with assignment
-    void operator-=(const MatrixNxN &other) {
+    void operator-=(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix subtraction is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] -= other.elements[i];
     }
 
     // matrix negation
-    MatrixNxN operator-() {
+    MatrixNxM operator-() {
         static_assert(Rows > 0 && Columns > 0, "Matrix negation is not defined for zero-dimensional matrices.");
-        MatrixNxN temp;
+        MatrixNxM temp;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] = -elements[i];
         return temp;
     }
 
     // matrix-scalar addition
-    template<typename scalarType> MatrixNxN operator+(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator+(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar addition is not defined for zero-dimensional matrices.");
-        MatrixNxN temp = *this;
+        MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] += scalar;
         return temp;
     }
 
     // matrix-scalar subtraction
-    template<typename scalarType> MatrixNxN operator-(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator-(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar subtraction is not defined for zero-dimensional matrices.");
-        MatrixNxN temp = *this;
+        MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] -= scalar;
         return temp;
     }
 
     // matrix-scalar multiplication
-    template<typename scalarType> MatrixNxN operator*(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator*(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar multiplication is not defined for zero-dimensional matrices.");
-        MatrixNxN temp = *this;
+        MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] *= scalar;
         return temp;
     }
@@ -80,9 +80,9 @@ struct Matrix {
     }
 
     // matrix-scalar division
-    template<typename scalarType> MatrixNxN operator/(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator/(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar division is not defined for zero-dimensional matrices.");
-        MatrixNxN temp = *this;
+        MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] /= scalar;
         return temp;
     }
