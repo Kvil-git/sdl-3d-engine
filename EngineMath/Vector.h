@@ -59,6 +59,22 @@ struct Vector {
         return Vector3({result.components[1], result.components[2], result.components[3]});
     }
 
+    // change all components of a vector to coresponding array element values
+    VectorN operator=(const ComponentType array[Dimensions]) {
+        VectorN output;
+        for(int i=0; i<Dimensions; i++){
+            output.components[i] = array[i];
+        }
+        return output
+    }
+
+    // change all components of a vector to coresponding components of another vector
+    void operator=(const VectorN& other) {
+        for(int i=0; i<Dimensions; i++){
+            this->components[i] = other.components[i];
+        }
+    }
+
     // vector addition just means adding corresponding coords 
     Vector operator+(const VectorN &other) {
         static_assert(Dimensions > 0, "Vector addition is not defined for zero-dimensional vectors.");
