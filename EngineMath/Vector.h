@@ -20,6 +20,16 @@ struct Vector {
     using VectorN = Vector<ComponentType, Dimensions>;
     using Vector3 = Vector<ComponentType, 3>;
 
+
+    ComponentType& operator[](int index) {   //for element assignment; e.g. |Vector[i] = k|
+        return components[index];
+    }
+
+    ComponentType operator[](int index) const {  //for retrieving value without assignment; e.g. |return Vector[i]|
+        return components[index];
+    }
+
+
     // matrix-vector multiplication
     template<typename MatrixType> VectorN operator*(const Matrix<MatrixType, Dimensions, Dimensions> &matrix) {
         static_assert(Dimensions > 0, "Matrix-vector multiplication is not defined for zero-dimensional vectors.");
