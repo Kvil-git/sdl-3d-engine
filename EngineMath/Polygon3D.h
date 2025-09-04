@@ -4,12 +4,12 @@
 #include "Vector.h"
 
 
-#ifndef POLYGON_H
-#define POLYGON_H
+#ifndef POLYGON3D_H
+#define POLYGON3D_H
 
 
 template<typename ComponentType, int SideCount>
-struct Polygon {
+struct Polygon3D {
     using Vertex3 = Vertex3<ComponentType>;
     using Vector3 = Vector<ComponentType, 3>;
 
@@ -27,17 +27,17 @@ struct Polygon {
         return (side1 % side2).Unit();
     }
 
-    Polygon(Vertex3 input[SideCount]){
+    Polygon3D(Vertex3 input[SideCount]){
         for(int i=0; i < SideCount; i++) vertices[i] = input[i];
         normal = FindSurfaceNormal();
     }
 
-    Polygon(std::array<Vertex3, SideCount> input){
+    Polygon3D(std::array<Vertex3, SideCount> input){
         for(int i=0; i < SideCount; i++) vertices[i] = input[i];
         normal = FindSurfaceNormal();
     }
 
-    Polygon(){
+    Polygon3D(){
         for(int i=0; i < SideCount; i++) vertices[i] = Vertex3();
         normal = Vector3();
     }
@@ -45,7 +45,7 @@ struct Polygon {
 };
 
 template<typename ComponentType>
-struct NPolygon {
+struct NGon3D {
     using Vertex3 = Vertex3<ComponentType>;
     using Vector3 = Vector<ComponentType, 3>;
 
@@ -63,17 +63,17 @@ struct NPolygon {
         return (side1 % side2).Unit();
     }
 
-    NPolygon(Vertex3 input[], size_t SideCount){
+    NGon3D(Vertex3 input[], size_t SideCount){
         for(int i=0; i < SideCount; i++) vertices.push_back(input[i]);
         normal = FindSurfaceNormal();
     }
 
-    NPolygon(std::vector<Vertex3> input){
+    NGon3D(std::vector<Vertex3> input){
         vertices = input;
         normal = FindSurfaceNormal();
     }
 
-    NPolygon(){
+    NGon3D(){
         vertices = std::vector<Vertex3>();
         normal = Vector3();
     }
