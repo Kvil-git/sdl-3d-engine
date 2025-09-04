@@ -75,7 +75,7 @@ struct Vector {
         for(int i=0; i<Dimensions; i++){
             output.components[i] = array[i];
         }
-        return output
+        return output;
     }
 
     // change all components of a vector to coresponding components of another vector
@@ -233,8 +233,9 @@ struct Vector {
         for(int i=0; i < Dimensions; i++) components[i] = _components[i];
     }
 
-    // copy constructor
-    Vector(const VectorN &other) {
+    // templated copy constructor
+    template<typename OtherComponentType>
+    Vector<ComponentType, Dimensions> (const Vector<OtherComponentType, Dimensions> &other){
         static_assert(Dimensions > 0, "Copy constructor is not defined for zero-dimensional vectors.");
         for(int i=0; i < Dimensions; i++) this->components[i] = other.components[i];
     }
