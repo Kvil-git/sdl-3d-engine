@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <string>
+#include "../../2D/Renderer/Renderer2D.h"
 
 struct Window {
     private:
@@ -16,6 +17,8 @@ struct Window {
         std::string title;
 
     public:
+        Renderer2D* renderer2D = nullptr;
+
         bool Init();
         void HandleEvent(SDL_Event& event);
 
@@ -33,8 +36,11 @@ struct Window {
                                                            renderer(nullptr),
                                                            width(width),
                                                            height(height),
-                                                           title(title) {};
+                                                           title(title),
+                                                           renderer2D(nullptr) {};
         ~Window(){ 
+            delete renderer2D;
+
             SDL_DestroyRenderer(renderer);
             SDL_DestroyWindow(window);
         };

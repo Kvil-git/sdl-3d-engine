@@ -28,6 +28,9 @@ bool Window::Init() {
         return false;
     }
 
+    renderer2D = new Renderer2D(renderer);
+    windowId = SDL_GetWindowID(window);
+
     return true;
 }
 
