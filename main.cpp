@@ -6,7 +6,7 @@
 #include "Shared/Enums/Colors.h"
 int main(){
 
-    std::vector<Window> windows(3, Window(800, 600, "3d engine"));
+    std::vector<Window> windows(2, Window(800, 600, "3d engine"));
     for(int i=0; i<windows.size(); i++){
         if (!windows[i].Init()) return -1;
     }
@@ -21,14 +21,21 @@ int main(){
             
             for(int i=0; i<windows.size(); i++){
                 windows[i].HandleEvent(event);
-                windows[i].renderer2D->setDrawColor(Colors::White);
+                windows[i].renderer2D->setDrawColor(Colors::Blue);
                 Vector<int, 2> center({150, 150});
-                windows[i].renderer2D->drawCircle(center, 25, 32);
+                Vector<int, 2> center2({350, 350});
+                windows[i].renderer2D->drawCircle(center, 25);
+                windows[i].renderer2D->setDrawColor(Colors::Green);
+                windows[i].renderer2D->drawCircle(center, 30);
+                windows[i].renderer2D->setDrawColor(Colors::Red);
                 windows[i].renderer2D->present();
+                windows[i].renderer2D->fillCircle(center2, 20);
+                windows[i].renderer2D->present();
+
             }
 
 
-            SDL_Delay(100);
+            SDL_Delay(1000);
         }
     }
     
