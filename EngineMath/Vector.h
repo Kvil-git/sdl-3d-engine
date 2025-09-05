@@ -17,7 +17,7 @@ template <typename ComponentType> struct Quaternion;
 
 template <typename ComponentType, size_t Dimensions>
 struct Vector {
-    ComponentType components[Dimensions];
+    std::array<ComponentType, Dimensions> components;
     using VectorN = Vector<ComponentType, Dimensions>;
     using Vector3 = Vector<ComponentType, 3>;
 
@@ -249,7 +249,15 @@ struct Vector {
 
     template <typename... Args>
     Vector(Args... args) : components{ static_cast<ComponentType>(args)... } {
-       static_assert(sizeof...(args) == Dimensions, "Wrong number of arguments");
+        static_assert(sizeof...(args) == Dimensions, "Wrong number of arguments");
+        components = {static_cast<ComponentType>(args)...};
+    }
+
+    Vector(std::initializer_list<ComponentType> init) {
+        if (init.size() != Dimensions) {
+            throw std::invalid_argument("Wrong number of arguments in initializer list");
+        }
+        std::copy(init.begin(), init.end(), components.begin());
     }
 
 };
