@@ -14,15 +14,15 @@ class Renderer2D {
     using Color4 = Vector<uint8_t, 4>;
     private:
         SDL_Renderer* renderer;
-        void putCirclePoints(int xc, int yc, int x, int y){
-            drawPoint(xc+x, yc+y);
-            drawPoint(xc-x, yc+y);
-            drawPoint(xc+x, yc-y);
-            drawPoint(xc-x, yc-y);
-            drawPoint(xc+y, yc+x);
-            drawPoint(xc-y, yc+x);
-            drawPoint(xc+y, yc-x);
-            drawPoint(xc-y, yc-x);
+        void PutCirclePoints(int xc, int yc, int x, int y){
+            DrawPoint(xc+x, yc+y);
+            DrawPoint(xc-x, yc+y);
+            DrawPoint(xc+x, yc-y);
+            DrawPoint(xc-x, yc-y);
+            DrawPoint(xc+y, yc+x);
+            DrawPoint(xc-y, yc+x);
+            DrawPoint(xc+y, yc-x);
+            DrawPoint(xc-y, yc-x);
         }
     public:
         explicit Renderer2D(SDL_Renderer* sdlRenderer) : renderer(sdlRenderer) {}
@@ -32,35 +32,35 @@ class Renderer2D {
         Renderer2D& operator=(const Renderer2D&) = delete;
         
         
-        void clear() { SDL_RenderClear(renderer); }
-        void present() { SDL_RenderPresent(renderer); }
+        void Clear() { SDL_RenderClear(renderer); }
+        void Present() { SDL_RenderPresent(renderer); }
         
         
         
-        void setDrawColor(const Color3& color) {
+        void SetDrawColor(const Color3& color) {
             SDL_SetRenderDrawColor(renderer, color.components[0], color.components[1], color.components[2], 255);
         }
 
-        void setDrawColor(const Color4& color) {
+        void SetDrawColor(const Color4& color) {
             SDL_SetRenderDrawColor(renderer, color.components[0], color.components[1], color.components[2], color.components[3]);
         }
         
                 
         template <typename ComponentType>
-        void drawPoint(const Vector<ComponentType,2>& point) {
+        void DrawPoint(const Vector<ComponentType,2>& point) {
             SDL_RenderDrawPoint(renderer, point.components[0], point.components[1]);
         }
 
-        void drawPoint(int x, int y){
+        void DrawPoint(int x, int y){
             SDL_RenderDrawPoint(renderer, x, y);
         }
 
         template <typename ComponentType>
-        void drawPointWithCustomWidth(const Vector<ComponentType,2>& point, float width) {
-            drawPointWithCustomWidth(point[0], point[1], width);
+        void DrawPointWithCustomWidth(const Vector<ComponentType,2>& point, float width) {
+            DrawPointWithCustomWidth(point[0], point[1], width);
         }
 
-        void drawPointWithCustomWidth(int x, int y, float width){
+        void DrawPointWithCustomWidth(int x, int y, float width){
             SDL_FRect pointRectangle{
                 x,
                 y,
@@ -71,16 +71,16 @@ class Renderer2D {
         }
 
         template <typename ComponentType>
-        void drawLine(const Vector<ComponentType, 2>& start, const Vector<ComponentType, 2>& end) {
+        void DrawLine(const Vector<ComponentType, 2>& start, const Vector<ComponentType, 2>& end) {
             SDL_RenderDrawLine(renderer, start.components[0], start.components[1], end.components[0], end.components[1]);
         }
 
-        void drawLine(int x1, int y1, int x2, int y2){
+        void DrawLine(int x1, int y1, int x2, int y2){
             SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
         }
 
         template <typename ComponentType>
-        void drawRect(const Vector<ComponentType, 2>& position, const Vector<ComponentType, 2>& size) {
+        void DrawRect(const Vector<ComponentType, 2>& position, const Vector<ComponentType, 2>& size) {
             SDL_Rect rect = {
                 position.components[0],
                 position.components[1],
@@ -91,7 +91,7 @@ class Renderer2D {
         }
 
         template <typename ComponentType>
-        void fillRect(const Vector<ComponentType, 2>& position, const Vector<ComponentType, 2>& size) {
+        void FillRect(const Vector<ComponentType, 2>& position, const Vector<ComponentType, 2>& size) {
             SDL_Rect rect = {
                 position.components[0],
                 position.components[1],
@@ -101,7 +101,7 @@ class Renderer2D {
             SDL_RenderFillRect(renderer, &rect);
         }
 
-        void fillRect(int x1, int y1, int x2, int y2){
+        void FillRect(int x1, int y1, int x2, int y2){
             SDL_Rect rect = {
                 x1, y1, x2 - x1, y2 - y1
             };
@@ -109,14 +109,14 @@ class Renderer2D {
         }
 
         template<typename ComponentType>
-        void drawCircle(const Vector<ComponentType, 2> &center, int radius){
-            drawCircle(center[0], center[1], radius);
+        void DrawCircle(const Vector<ComponentType, 2> &center, int radius){
+            DrawCircle(center[0], center[1], radius);
         }
 
-        void drawCircle(int centerX, int centerY, int radius){
+        void DrawCircle(int centerX, int centerY, int radius){
             int x = 0, y = radius;
             int d = 3 - 2 * radius;
-            putCirclePoints(centerX, centerY, x, y);
+            PutCirclePoints(centerX, centerY, x, y);
             while (y >= x){
                 if (d > 0) {
                     y--; 
@@ -125,28 +125,28 @@ class Renderer2D {
                 else
                     d = d + 4 * x + 6;
                 x++;
-                putCirclePoints(centerX, centerY, x, y);
+                PutCirclePoints(centerX, centerY, x, y);
             }
         }
 
         template<typename ComponentType>
-        void fillCircle(const Vector<ComponentType, 2> &center, int radius){
-            fillCircle(center[0], center[1], radius);
+        void FillCircle(const Vector<ComponentType, 2> &center, int radius){
+            FillCircle(center[0], center[1], radius);
         }
 
-        void fillCircle(int centerX, int centerY, int radius) {
+        void FillCircle(int centerX, int centerY, int radius) {
             //http://fredericgoset.ovh/mathematiques/courbes/en/filled_circle.html
             int x = 0;
             int y = radius;
             int m = 5 - 4 * radius;
 
             while (x <= y) {
-                fillRect(centerX - y, centerY - x, centerX + y + 1, centerY - x + 1);
-                fillRect(centerX - y, centerY + x, centerX + y + 1, centerY + x + 1);
+                FillRect(centerX - y, centerY - x, centerX + y + 1, centerY - x + 1);
+                FillRect(centerX - y, centerY + x, centerX + y + 1, centerY + x + 1);
 
                 if (m > 0) {
-                    fillRect(centerX - x, centerY - y, centerX + x + 1, centerY - y + 1);
-                    fillRect(centerX - x, centerY + y, centerX + x + 1, centerY + y + 1);
+                    FillRect(centerX - x, centerY - y, centerX + x + 1, centerY - y + 1);
+                    FillRect(centerX - x, centerY + y, centerX + x + 1, centerY + y + 1);
                     y--;
                     m -= 8 * y;
                 }
@@ -157,13 +157,13 @@ class Renderer2D {
         }
         
         template <typename ComponentType>
-        void drawPolygon(const std::vector<Vector<ComponentType, 2>>& points) {
+        void DrawPolygon(const std::vector<Vector<ComponentType, 2>>& points) {
             if (points.size() < 2) return;
             
             for (size_t i = 0; i < points.size() - 1; i++) {
-                drawLine(points[i], points[i + 1]);
+                DrawLine(points[i], points[i + 1]);
             }
-            drawLine(points.back(), points.front());
+            DrawLine(points.back(), points.front());
         }
                 
         

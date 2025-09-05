@@ -21,16 +21,19 @@ int main(){
             
             for(int i=0; i<windows.size(); i++){
                 windows[i].HandleEvent(event);
-                windows[i].renderer2D->setDrawColor(Colors::Blue);
+                windows[i].renderer2D->SetDrawColor(Colors::Blue);
+
                 Vector<int, 2> center = {150, 150};
                 Vector<int, 2> center2(350, 350);
-                windows[i].renderer2D->drawCircle(center, 25);
-                windows[i].renderer2D->setDrawColor(Colors::Green);
-                windows[i].renderer2D->drawCircle(center, 30);
-                windows[i].renderer2D->setDrawColor(Colors::Red);
-                windows[i].renderer2D->present();
-                windows[i].renderer2D->fillCircle(center2, 20);
-                windows[i].renderer2D->present();
+
+                windows[i].renderer2D->DrawCircle(center, 25);
+                windows[i].renderer2D->SetDrawColor(Colors::Green);
+                windows[i].renderer2D->DrawCircle(center, 30);
+                windows[i].renderer2D->Present();
+
+                windows[i].renderer2D->SetDrawColor(Colors::Red);
+                windows[i].renderer2D->FillCircle(center2, 20);
+                windows[i].renderer2D->Present();
 
             }
 
