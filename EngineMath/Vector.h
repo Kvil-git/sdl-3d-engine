@@ -22,10 +22,16 @@ struct Vector {
 
 
     ComponentType& operator[](int index) {   //for element assignment; e.g. |Vector[i] = k|
+        if (index >= Dimensions) {
+            throw std::out_of_range("Index out of range");
+        }
         return components[index];
     }
 
     ComponentType operator[](int index) const {  //for retrieving value without assignment; e.g. |return Vector[i]|
+        if (index >= Dimensions) {
+            throw std::out_of_range("Index out of range");
+        }
         return components[index];
     }
 
@@ -238,6 +244,11 @@ struct Vector {
     Vector<ComponentType, Dimensions> (const Vector<OtherComponentType, Dimensions> &other){
         static_assert(Dimensions > 0, "Copy constructor is not defined for zero-dimensional vectors.");
         for(int i=0; i < Dimensions; i++) this->components[i] = other.components[i];
+    }
+
+    template <typename... Args>
+    Vector(Args... args) : components{ static_cast<ComponentType>(args)... } {
+       static_assert(sizeof...(args) == Dimensions, "Wrong number of arguments");
     }
 
 };
