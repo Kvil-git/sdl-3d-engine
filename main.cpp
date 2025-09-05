@@ -22,7 +22,7 @@ int main(){
             for(int i=0; i<windows.size(); i++){
                 windows[i].HandleEvent(event);
                 windows[i].renderer2D->setDrawColor(Colors::Blue);
-                Vector<int, 2> center(150, 150);
+                Vector<int, 2> center = {150, 150};
                 Vector<int, 2> center2(350, 350);
                 windows[i].renderer2D->drawCircle(center, 25);
                 windows[i].renderer2D->setDrawColor(Colors::Green);
