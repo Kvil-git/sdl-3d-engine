@@ -60,7 +60,7 @@ class Renderer2D {
             DrawPointWithCustomWidth(point[0], point[1], width);
         }
 
-        void DrawPointWithCustomWidth(int x, int y, float width){
+        void DrawPointWithCustomWidth(float x, float y, float width){
             SDL_FRect pointRectangle{
                 x,
                 y,
