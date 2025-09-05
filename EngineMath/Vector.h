@@ -2,6 +2,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <stdexcept>
 
 #ifndef MATRIX_H
 template <typename ElementType, size_t Rows, size_t Columns> struct Matrix;
