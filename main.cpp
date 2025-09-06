@@ -17,33 +17,6 @@ using Triangle = Polygon3D<float, 3>;
 using Vertex3F = Vertex3<float>;
 
 int main(){
-
-    // Triangle cubeTriangles[12] = {
-    //     // SOUTH
-	// 	Triangle(Vertex3F(0.0f, 0.0f, 0.0f),    Vertex3F(0.0f, 1.0f, 0.0f),    Vertex3F(1.0f, 1.0f, 0.0f)),
-	// 	Triangle(Vertex3F(0.0f, 0.0f, 0.0f),    Vertex3F(1.0f, 1.0f, 0.0f),    Vertex3F(1.0f, 0.0f, 0.0f)),
-
-	// 	// EAST                                                      
-	// 	Triangle(Vertex3F( 1.0f, 0.0f, 0.0f),   Vertex3F(1.0f, 1.0f, 0.0f),   Vertex3F(1.0f, 1.0f, 1.0f)),
-	// 	Triangle(Vertex3F(1.0f, 0.0f, 0.0f),    Vertex3F(1.0f, 1.0f, 1.0f),    Vertex3F(1.0f, 0.0f, 1.0f)),
-
-	// 	// NORTH                                                     
-	// 	Triangle(Vertex3F(1.0f, 0.0f, 1.0f),    Vertex3F(1.0f, 1.0f, 1.0f),    Vertex3F(0.0f, 1.0f, 1.0f)),
-	// 	Triangle(Vertex3F(1.0f, 0.0f, 1.0f),    Vertex3F(0.0f, 1.0f, 1.0f),    Vertex3F(0.0f, 0.0f, 1.0f)),
-
-	// 	// WEST                                                      
-	// 	Triangle(Vertex3F(0.0f, 0.0f, 1.0f),    Vertex3F(0.0f, 1.0f, 1.0f),    Vertex3F(0.0f, 1.0f, 0.0f)),
-	// 	Triangle(Vertex3F(0.0f, 0.0f, 1.0f),    Vertex3F(0.0f, 1.0f, 0.0f),    Vertex3F(0.0f, 0.0f, 0.0f)),
-
-	// 	// TOP                                                       
-	// 	Triangle(Vertex3F(0.0f, 1.0f, 0.0f),    Vertex3F(0.0f, 1.0f, 1.0f),    Vertex3F(1.0f, 1.0f, 1.0f)),
-	// 	Triangle(Vertex3F(0.0f, 1.0f, 0.0f),    Vertex3F(1.0f, 1.0f, 1.0f),    Vertex3F(1.0f, 1.0f, 0.0f)),
-
-	// 	// BOTTOM                                                    
-	// 	Triangle(Vertex3F(1.0f, 0.0f, 1.0f),    Vertex3F(0.0f, 0.0f, 1.0f),    Vertex3F(0.0f, 0.0f, 0.0f)),
-	// 	Triangle(Vertex3F(1.0f, 0.0f, 1.0f),    Vertex3F(0.0f, 0.0f, 0.0f),    Vertex3F(1.0f, 0.0f, 0.0f)),
-    // };
-    
     float width = 800.0f, height = 600.0f;
 
     float nearPlane = 0.1f;
