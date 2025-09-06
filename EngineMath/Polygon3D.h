@@ -60,6 +60,12 @@ struct Polygon3D {
     std::array<Vertex, SideCount> vertices;
     Vector3 normal;
 
+   
+    Vector3 GetNormal(){
+        if (normal.ComponentSum() == 0) normal = FindSurfaceNormal();
+        return normal;
+    }
+    
     bool IsPointInTriangle(Vector<ComponentType, 2>& p, Vector<ComponentType, 2>& a, Vector<ComponentType, 2>& b, Vector<ComponentType, 2>& c) {
         // Compute vectors
         Vector<ComponentType, 2> v0 = c - a;
@@ -206,6 +212,7 @@ struct Polygon3D {
                 vertex.position[2] = transformed[2] / transformed[3];
             }
         }
+        normal = FindSurfaceNormal();
     }
 
     Polygon3D CopyTransformedByMatrix4x4(const Matrix<ComponentType, 4, 4> &matrix){
@@ -222,6 +229,7 @@ struct Polygon3D {
                 vertex.position[2] = transformed[2] / transformed[3];
             }
         }
+        copy.normal = copy.FindSurfaceNormal();
         return copy;
     }
 
@@ -267,13 +275,14 @@ struct Polygon3D {
 
     Polygon3D(){
         for(int i=0; i < SideCount; i++) vertices[i] = Vertex();
-        normal = Vector3();
+        normal = FindSurfaceNormal();
     }
 
     template <typename... Args>
     Polygon3D(Args... args) : vertices{ static_cast<Vertex>(args)... } {
         static_assert(sizeof...(args) == SideCount, "Wrong number of arguments");
         vertices = {static_cast<Vertex>(args)...};
+        normal = FindSurfaceNormal();
     }
 
     Polygon3D(std::initializer_list<ComponentType> init) {
@@ -281,6 +290,7 @@ struct Polygon3D {
             throw std::invalid_argument("Wrong number of arguments in initializer list");
         }
         std::copy(init.begin(), init.end(), vertices.begin());
+        normal = FindSurfaceNormal();
     }
 
 };
@@ -294,7 +304,9 @@ struct NGon3D {
     Vector3 normal;
 
     Vector3 GetNormal(){
-        if (normal.ComponentSum() == 0) normal = FindSurfaceNormal();
+        if (normal.SquaredComponentSum() < 1e-10f) {
+            normal = FindSurfaceNormal();
+        }
         return normal;
     }
 

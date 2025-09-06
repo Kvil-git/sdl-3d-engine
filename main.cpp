@@ -109,6 +109,11 @@ int main(){
     }
 
 
+
+    Vector<float, 3> cameraCoordinates(0,0,0);
+
+
+
     while(running){
          while(SDL_PollEvent(&event) != 0){
             if(event.type == SDL_QUIT){
@@ -150,7 +155,7 @@ int main(){
 
 
 
-        float translateX = 0.0f, translateY = 0.0f, translateZ = 1.0f;
+        float translateX = 0.0f, translateY = 0.0f, translateZ = 15.0f;
 
         Matrix<float, 4, 4> translationMatrix = {
             1.0f, 0.0f, 0.0f, translateX,
@@ -167,9 +172,18 @@ int main(){
         std::vector<Polygon2D<float, 3>> projectedTriangles;
         for(int i=0; i<triangulatedTris.size(); i++){
             Triangle transformed = triangulatedTris[i].CopyTransformedByMatrix4x4(combinedTransformation);
-            projectedTriangles.push_back(transformed.ToPolygon2D());
-            projectedTriangles[i] *= 200.0f;
-            projectedTriangles[i] += Vector<float, 2>(width/2, height/2);
+
+            Vector<float,3> normal = transformed.GetNormal();
+            if (normal.SquaredComponentSum() < 1e-10f) {
+                continue; // skip degenerate triangle
+            }
+            if ((normal * (transformed.vertices[0].position - cameraCoordinates)) <= 0.0f) continue;
+            
+            auto projected = transformed.ToPolygon2D();
+            projected *= 700.0f;
+            projected += Vector<float, 2>(width/2, height/2);
+            
+            projectedTriangles.push_back(projected);
         }
 
 

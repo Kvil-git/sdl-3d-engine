@@ -212,13 +212,21 @@ struct Vector {
     // turn this vector into a unit vector
     void Normalize() {
         static_assert(Dimensions > 0, "Normalization is not defined for zero-dimensional vectors.");
-        *this /= this->Length();
+        double len = Length();
+        if (len < 1e-10) {
+            return;
+        }
+        *this /= len;
     }    
 
     // return a normalized copy of this vector
     VectorN Unit() {
         static_assert(Dimensions > 0, "Unit vector is not defined for zero-dimensional vectors.");
-        return *this / this->Length();
+        double len = Length();
+        if (len < 1e-10) {
+            return VectorN(); // return zero vector
+        }
+        return *this / len;
     }
 
 
