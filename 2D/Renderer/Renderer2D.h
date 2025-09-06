@@ -176,6 +176,11 @@ class Renderer2D {
             }
             DrawLine(points.back(), points.front());
         }
+
+        template <typename ComponentType>
+        void FillTriangle(const std::array<Vector<ComponentType, 2>, 3>& points){
+
+        }
                 
         
 };

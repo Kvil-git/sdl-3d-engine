@@ -44,9 +44,7 @@ struct Polygon2D {
         }
     }
 
-    Polygon2D(){
-        
-    }
+    Polygon2D(){}
 };
 
 

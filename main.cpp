@@ -11,6 +11,7 @@
 #include "EngineMath/ModelLoader.h"
 #include <string>
 #include "EngineMath/OutputFunctions.h"
+#include <algorithm>
 
 using Triangle = Polygon3D<float, 3>;
 using Vertex3F = Vertex3<float>;
@@ -76,7 +77,7 @@ int main(){
 
 
     ModelLoader<float> loader;
-    if(!loader.LoadFromObj("assets/models/rizzard.obj")){
+    if(!loader.LoadFromObj("assets/models/cube.obj")){
         std::cerr<<"oshibka stop 000000000"<<std::endl;
     }
 
@@ -96,7 +97,7 @@ int main(){
     
 
     std::cout<<loader.quadrilaterals<<std::endl;
-
+    std::cout<<loader.triangles<<std::endl;
 
     std::vector<Triangle> triangulatedTris;
     triangulatedTris.reserve(loader.quadrilaterals.size() * 2); 
@@ -170,25 +171,45 @@ int main(){
         
 
         std::vector<Polygon2D<float, 3>> projectedTriangles;
-        for(int i=0; i<triangulatedTris.size(); i++){
-            Triangle transformed = triangulatedTris[i].CopyTransformedByMatrix4x4(combinedTransformation);
+
+        auto sortingCriteria = [](Triangle& one, Triangle& two){
+            float z1 = (one.vertices[0].position[2] + one.vertices[1].position[2] + one.vertices[2].position[2]) / 3.0f;
+            float z2 = (two.vertices[0].position[2] + two.vertices[1].position[2] + two.vertices[2].position[2]) / 3.0f;
+            return z1 < z2;
+        };
+
+        std::sort(loader.triangles.begin(), loader.triangles.end(), sortingCriteria);
+        std::sort(triangulatedTris.begin(), triangulatedTris.end(), sortingCriteria);
+
+        for(auto triangle : loader.triangles){
+            Triangle transformed = triangle.CopyTransformedByMatrix4x4(combinedTransformation);
+            Vector<float,3> normal = transformed.GetNormal();
+            if (normal.SquaredComponentSum() < 1e-10f) {
+                continue; // skip degenerate triangle
+            }
+            if ((normal * (transformed.vertices[0].position - cameraCoordinates)) < -0.01f) continue;
+            
+            auto projected = transformed.ToPolygon2D();
+            projected *= 700.0f;
+            projected += Vector<float, 2>(width/2, height/2);
+
+            projectedTriangles.push_back(projected);
+        }
+        for(auto triangle : triangulatedTris){
+            Triangle transformed = triangle.CopyTransformedByMatrix4x4(combinedTransformation);
 
             Vector<float,3> normal = transformed.GetNormal();
             if (normal.SquaredComponentSum() < 1e-10f) {
                 continue; // skip degenerate triangle
             }
-            if ((normal * (transformed.vertices[0].position - cameraCoordinates)) <= 0.0f) continue;
+            if ((normal * (transformed.vertices[0].position - cameraCoordinates)) < -0.01f) continue;
             
             auto projected = transformed.ToPolygon2D();
             projected *= 700.0f;
             projected += Vector<float, 2>(width/2, height/2);
-            
+
             projectedTriangles.push_back(projected);
         }
-
-
-
-
 
 
         for(int i=0; i<windows.size(); i++){
