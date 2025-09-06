@@ -4,8 +4,9 @@
 #include <SDL2/SDL.h>
 #include <stdint.h>
 #include <vector>
-#include "../../EngineMath/Vector.h"
+#include <array>
 #include <math.h>
+#include "../../EngineMath/Vector.h"
 
 
 
@@ -158,6 +159,16 @@ class Renderer2D {
         
         template <typename ComponentType>
         void DrawPolygon(const std::vector<Vector<ComponentType, 2>>& points) {
+            if (points.size() < 2) return;
+            
+            for (size_t i = 0; i < points.size() - 1; i++) {
+                DrawLine(points[i], points[i + 1]);
+            }
+            DrawLine(points.back(), points.front());
+        }
+
+        template <typename ComponentType>
+        void DrawTriangle(const std::array<Vector<ComponentType, 2>, 3>& points) {
             if (points.size() < 2) return;
             
             for (size_t i = 0; i < points.size() - 1; i++) {

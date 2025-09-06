@@ -43,7 +43,7 @@ struct Vector {
         VectorN temp;
         for(int i=0; i < Dimensions; i++) {
             for(int j=0; j < Dimensions; j++) {
-                temp.components[i] += matrix.components[i * Dimensions + j] * components[j];
+                temp.components[i] += matrix.elements[i * Dimensions + j] * components[j];
             }
         }
         return temp;
@@ -248,8 +248,8 @@ struct Vector {
     }
 
     template <typename... Args>
-    Vector(Args... args) : components{ static_cast<ComponentType>(args)... } {
-        static_assert(sizeof...(args) == Dimensions, "Wrong number of arguments");
+    explicit Vector(Args... args) {
+        static_assert(sizeof...(Args) == Dimensions, "Wrong number of arguments");
         components = {static_cast<ComponentType>(args)...};
     }
 

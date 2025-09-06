@@ -1,19 +1,16 @@
-#include <iostream>
-#include <array>
-
-#ifndef VECTOR_H
-template <typename ElementType, size_t Dimensions> struct Vector;
-#endif
-
 #ifndef MATRIX_H
 #define MATRIX_H
+
+#include <iostream>
+#include <array>
+#include <initializer_list>
 
 template <typename ElementType, size_t Rows, size_t Columns>
 struct Matrix {
     using MatrixNxM = Matrix<ElementType, Rows, Columns>;
-    ElementType elements[Rows * Columns];
+    std::array<ElementType, Rows*Columns> elements;
 
-    // matrix addition
+    // Matrix addition
     MatrixNxM operator+(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix addition is not defined for zero-dimensional matrices.");
         MatrixNxM temp;
@@ -21,13 +18,13 @@ struct Matrix {
         return temp;
     }
 
-    // addition with assignment
+    // Addition with assignment
     void operator+=(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix addition is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] += other.elements[i];
     }
 
-    // matrix subtraction
+    // Matrix subtraction
     MatrixNxM operator-(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix subtraction is not defined for zero-dimensional matrices.");
         MatrixNxM temp;
@@ -35,13 +32,13 @@ struct Matrix {
         return temp;
     }
 
-    // subtraction with assignment
+    // Subtraction with assignment
     void operator-=(const MatrixNxM &other) {
         static_assert(Rows > 0 && Columns > 0, "Matrix subtraction is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] -= other.elements[i];
     }
 
-    // matrix negation
+    // Matrix negation
     MatrixNxM operator-() {
         static_assert(Rows > 0 && Columns > 0, "Matrix negation is not defined for zero-dimensional matrices.");
         MatrixNxM temp;
@@ -49,7 +46,7 @@ struct Matrix {
         return temp;
     }
 
-    // matrix-scalar addition
+    // Matrix-scalar addition
     template<typename scalarType> MatrixNxM operator+(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar addition is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
@@ -57,7 +54,7 @@ struct Matrix {
         return temp;
     }
 
-    // matrix-scalar subtraction
+    // Matrix-scalar subtraction
     template<typename scalarType> MatrixNxM operator-(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar subtraction is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
@@ -65,7 +62,7 @@ struct Matrix {
         return temp;
     }
 
-    // matrix-scalar multiplication
+    // Matrix-scalar multiplication
     template<typename scalarType> MatrixNxM operator*(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar multiplication is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
@@ -73,13 +70,13 @@ struct Matrix {
         return temp;
     }
 
-    // matrix-scalar multiplication with assignment
+    // Matrix-scalar multiplication with assignment
     template<typename scalarType> void operator*=(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar multiplication is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] *= scalar;
     }
 
-    // matrix-scalar division
+    // Matrix-scalar division
     template<typename scalarType> MatrixNxM operator/(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar division is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
@@ -87,17 +84,16 @@ struct Matrix {
         return temp;
     }
 
-    // matrix-scalar division with assignment
+    // Matrix-scalar division with assignment
     template<typename scalarType> void operator/=(const scalarType &scalar) {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar division is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] /= scalar;
     }
 
-    // matrix-matrix multiplication
+    // Matrix-matrix multiplication
     template<size_t OtherColumns>
     Matrix<ElementType, Rows, OtherColumns> operator*(const Matrix<ElementType, Columns, OtherColumns> &other) {
         static_assert(Rows > 0 && Columns > 0 && OtherColumns > 0, "Matrix-matrix multiplication is not defined for zero-dimensional matrices.");
-        static_assert(OtherColumns == Columns, "Matrix-matrix multiplication is only defined for matrices with matching inner dimensions.");
         Matrix<ElementType, Rows, OtherColumns> temp;
         for(int i=0; i < Rows; i++) {
             for(int j=0; j < OtherColumns; j++) {
@@ -110,26 +106,33 @@ struct Matrix {
         return temp;
     }
 
-    // default constructor
+    // Default constructor
     Matrix() {
         static_assert(Rows > 0 && Columns > 0, "Zero matrix is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] = 0;
     }
 
-    // constructor from 2D array
+    // Constructor from 2D array
     Matrix(ElementType array[Rows][Columns]){
         static_assert(Rows > 0 && Columns > 0, "Nonzero matrix is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows; i++){
             for(int j=0; j < Columns; j++){
-                elements[Rows * i + j] = array[i][j];
+                elements[i * Columns + j] = array[i][j];
             }
         }
     }
 
-    // constructor from 1D array
+    // Constructor from 1D array
     Matrix(ElementType array[Rows * Columns]) {
         static_assert(Rows > 0 && Columns > 0, "Nonzero matrix is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows * Columns; i++) elements[i] = array[i];
+    }
+
+    Matrix(std::initializer_list<ElementType> init){
+        if(init.size() != Rows * Columns){
+            throw std::runtime_error("invalid number of elements in initializer list");
+        }
+        std::copy(init.begin(), init.end(), elements.begin());
     }
 };
 

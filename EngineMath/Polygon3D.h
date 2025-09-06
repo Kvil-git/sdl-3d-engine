@@ -1,24 +1,119 @@
-#include <iostream>
-#include <array>
-#include "Vertex.h"
-#include "Vector.h"
-
-
 #ifndef POLYGON3D_H
 #define POLYGON3D_H
 
 
+#include <iostream>
+#include <array>
+#include <vector>
+#include <stdexcept>
+#include "Vertex.h"
+#include "Vector.h"
+#include "Matrix.h"
+
+
+template<typename ComponentType, int SideCount>
+struct Polygon2D {
+    using Vector2 = Vector<ComponentType, 2>;
+    std::array<Vector2, SideCount> vertices;
+    void operator= (const Polygon2D &other){
+        vertices = other.vertices;
+    }
+    void operator+= (const Vector2 &translation){
+        for(Vector2& vertex : vertices){
+            vertex += translation;;
+        }
+    }
+    template<typename scalarType>
+    void operator*= (const scalarType &scalar){
+        for(Vector2& vertex : vertices){
+            vertex *= scalar;
+        }
+    }
+    
+    template<typename scalarType>
+    void scaleX(const scalarType &scalar){
+        for(Vector2& vertex : vertices){
+            vertex[0] *= scalar;
+        }
+    }
+
+    template<typename scalarType>
+    void scaleY(const scalarType &scalar){
+        for(Vector2& vertex : vertices){
+            vertex[1] *= scalar;
+        }
+    }
+
+    Polygon2D(){
+        
+    }
+};
+
+
 template<typename ComponentType, int SideCount>
 struct Polygon3D {
-    using Vertex3 = Vertex3<ComponentType>;
+    using Vertex = Vertex3<ComponentType>;
+    using Vector2 = Vector<ComponentType, 2>;
     using Vector3 = Vector<ComponentType, 3>;
+    using Vector4 = Vector<ComponentType, 4>;
 
-    Vertex3 vertices[SideCount];
+    std::array<Vertex, SideCount> vertices;
     Vector3 normal;
 
-    Vector3 GetNormal(){
-        if (normal.ComponentSum() == 0) normal = FindSurfaceNormal();
-        return normal;
+    void TransformByMatrix4x4(const Matrix<ComponentType, 4, 4>& matrix) {
+        for (Vertex vertex : vertices) {
+            // Convert to homogeneous coordinates
+            Vector4 homoPos(vertex.position[0], vertex.position[1], vertex.position[2], 1.0f);
+            Vector4 transformed = homoPos * matrix;
+            
+            // Perspective divide
+            if (transformed[3] != 0.0f) {
+                vertex.position[0] = transformed[0] / transformed[3];
+                vertex.position[1] = transformed[1] / transformed[3];
+                vertex.position[2] = transformed[2] / transformed[3];
+            }
+        }
+    }
+
+    Polygon3D CopyTransformedByMatrix4x4(const Matrix<ComponentType, 4, 4> &matrix){
+        Polygon3D copy(*this);
+        for (Vertex& vertex : copy.vertices) {
+            // Convert to homogeneous coordinates
+            Vector4 homoPos(vertex.position[0], vertex.position[1], vertex.position[2], 1.0f);
+            Vector4 transformed = homoPos * matrix;
+            
+            // Perspective divide
+            if (transformed[3] != 0.0f) {
+                vertex.position[0] = transformed[0] / transformed[3];
+                vertex.position[1] = transformed[1] / transformed[3];
+                vertex.position[2] = transformed[2] / transformed[3];
+            }
+        }
+        return copy;
+    }
+
+    Polygon2D<ComponentType, SideCount> ToPolygon2D(){
+        Polygon2D<ComponentType, SideCount> output;
+        for(int v=0; v<SideCount; v++){
+            output.vertices[v] = Vector2(vertices[v].position[0], vertices[v].position[1]) ;
+        }
+        return output;
+    }
+
+    template<typename MatrixComponentType, int MatrixRows> // can only multiply by matrices with same width as dimensions of vectors
+    Polygon3D operator*(const Matrix<MatrixComponentType, MatrixRows, 3> &matrix){
+        Polygon3D copy = *this;
+        for(Vertex vertex : copy.vertices){
+            vertex *= matrix;
+        }
+        return copy;
+    }
+
+    template<typename MatrixComponentType, int MatrixRows> // can only multiply by matrices with same width as dimensions of vectors
+    void operator*=(const Matrix<MatrixComponentType, MatrixRows, 3> &matrix){
+        for(Vertex vertex : vertices){
+            vertex *= matrix;
+        }
     }
 
     Vector3 FindSurfaceNormal() {
@@ -27,29 +122,42 @@ struct Polygon3D {
         return (side1 % side2).Unit();
     }
 
-    Polygon3D(Vertex3 input[SideCount]){
+    Polygon3D(Vertex input[SideCount]){
         for(int i=0; i < SideCount; i++) vertices[i] = input[i];
         normal = FindSurfaceNormal();
     }
 
-    Polygon3D(std::array<Vertex3, SideCount> input){
+    Polygon3D(std::array<Vertex, SideCount> input){
         for(int i=0; i < SideCount; i++) vertices[i] = input[i];
         normal = FindSurfaceNormal();
     }
 
     Polygon3D(){
-        for(int i=0; i < SideCount; i++) vertices[i] = Vertex3();
+        for(int i=0; i < SideCount; i++) vertices[i] = Vertex();
         normal = Vector3();
+    }
+
+    template <typename... Args>
+    Polygon3D(Args... args) : vertices{ static_cast<Vertex>(args)... } {
+        static_assert(sizeof...(args) == SideCount, "Wrong number of arguments");
+        vertices = {static_cast<Vertex>(args)...};
+    }
+
+    Polygon3D(std::initializer_list<ComponentType> init) {
+        if (init.size() != SideCount) {
+            throw std::invalid_argument("Wrong number of arguments in initializer list");
+        }
+        std::copy(init.begin(), init.end(), vertices.begin());
     }
 
 };
 
 template<typename ComponentType>
 struct NGon3D {
-    using Vertex3 = Vertex3<ComponentType>;
+    using Vertex = Vertex3<ComponentType>;
     using Vector3 = Vector<ComponentType, 3>;
 
-    std::vector<Vertex3> vertices;
+    std::vector<Vertex> vertices;
     Vector3 normal;
 
     Vector3 GetNormal(){
@@ -63,18 +171,18 @@ struct NGon3D {
         return (side1 % side2).Unit();
     }
 
-    NGon3D(Vertex3 input[], size_t SideCount){
+    NGon3D(Vertex input[], size_t SideCount){
         for(int i=0; i < SideCount; i++) vertices.push_back(input[i]);
         normal = FindSurfaceNormal();
     }
 
-    NGon3D(std::vector<Vertex3> input){
+    NGon3D(std::vector<Vertex> input){
         vertices = input;
         normal = FindSurfaceNormal();
     }
 
     NGon3D(){
-        vertices = std::vector<Vertex3>();
+        vertices = std::vector<Vertex>();
         normal = Vector3();
     }
 };
