@@ -1,86 +1,21 @@
-#include "Material.h"
-#include "Model.h"
+#ifndef MODELLOADER_H
+#define MODELLOADER_H
+
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
+#include "Material.h"
+#include "Model.h"
 #include "StringFunctions.cpp"
-
-
-#ifndef OUTPUT_FUNCTIONS
-#define OUTPUT_FUNCTIONS
-std::ostream& operator<<(std::ostream &os, const std::vector<std::string> &vector){
-    os << "||std::vector<std::string>>|| [";
-    for(int i=0; i < vector.size(); i++) os << vector[i] << (i == vector.size() - 1 ? "" : ", ");
-    os << "]";
-    return os;
-}
-
-
-template <typename ComponentType, size_t Dimensions>
-std::ostream& operator<<(std::ostream &os, const Vector<ComponentType, Dimensions> &vector) {
-    os << "||Vector|| [";
-    for(int i=0; i < Dimensions; i++) os << vector.components[i] << (i == Dimensions - 1 ? "" : ", ");
-    os << "]";
-    return os;
-}
-
-
-template <typename ComponentType>
-std::ostream& operator<<(std::ostream &os, const Vertex3<ComponentType> &vertex) {
-    os << "||Vertex||\n";
-    os << "Position: " << vertex.position << std::endl;
-    os << "Normal: " << vertex.normal << std::endl;
-    os << "Texture Coordinates: " << vertex.textureCoordinates << std::endl;
-    return os;
-}
-
-template <typename ComponentType>
-std::ostream& operator<<(std::ostream &os, const NPolygon<ComponentType> &ngon) {
-    os << "||Polygon "<< ngon.vertices.size() << "||\n";
-    for(int i=0; i < ngon.vertices.size(); i++) os << ngon.vertices[i] << std::endl;
-    return os;
-}
-
-
-template <typename ComponentType, int VertexCount>
-std::ostream& operator<<(std::ostream &os, const Polygon<ComponentType, VertexCount> &polygon) {
-    os << "||Polygon" << VertexCount << "||\n";
-    for(int i=0; i < VertexCount; i++) os << polygon.vertices[i] << std::endl;
-    return os;
-}
-
-
-template <typename ComponentType>
-std::ostream& operator<<(std::ostream &os, const Material<ComponentType> &material) {
-    os << "||Material|| " << material.name << std::endl;
-    os << "Ambient Color: " << material.ambientColor << std::endl;
-    os << "Diffuse Color: " << material.diffuseColor << std::endl;
-    os << "Specular Color: " << material.specularColor << std::endl;
-    os << "Specular Exponent: " << material.specularExponent << std::endl;
-    os << "Dissolve: " << material.dissolve << std::endl;
-    os << "Optical Density: " << material.opticalDensity << std::endl;
-    os << "Illumination: " << material.illumination << std::endl;
-    os << "Ambient Color Map: " << material.ambientColorMap << std::endl;
-    os << "Diffuse Color Map: " << material.diffuseColorMap << std::endl;
-    os << "Specular Color Map: " << material.specularColorMap << std::endl;
-    os << "Specular Exponent Map: " << material.specularExponentMap << std::endl;
-    os << "Dissolve Map: " << material.dissolveMap << std::endl;
-    os << "Bump Map: " << material.bumpMap << std::endl;
-    return os;
-}
-#endif
-
-
-#ifndef MODELLOADER_H
-#define MODELLOADER_H
+#include "OutputFunctions.h"
 
 template <typename ComponentType>
 class ModelLoader {
     private:
-        using Triangle3 = Polygon<ComponentType, 3>;
-        using Quadrilateral = Polygon<ComponentType, 4>;
-        using NGon = NPolygon<ComponentType>;
+        using Triangle3 = Polygon3D<ComponentType, 3>;
+        using Quadrilateral = Polygon3D<ComponentType, 4>;
+        using NGon = NGon3D<ComponentType>;
 
         using Vertex3 = Vertex3<ComponentType>;
         using Model = Model<ComponentType>;
@@ -95,6 +30,7 @@ class ModelLoader {
         std::vector<Quadrilateral> quadrilaterals;
         std::vector<NGon> ngons;
         
+        ModelLoader(){};
 
         bool LoadFromObj(std::string filepath) {
             if (EndsWith(filepath, ".obj") == false) {
@@ -161,7 +97,7 @@ class ModelLoader {
                     std::cout<<"\n\n\nClosing a material file\n\n\n";
                     materialFile.close();
                     materials.push_back(newMaterial);
-                    std::cout << newMaterial << std::endl;
+                    //std::cout << newMaterial << std::endl;
                     }
                 }
                 else if(lineWords[0] == "v") {
@@ -206,17 +142,17 @@ class ModelLoader {
                 }
             }
 
-            for(int i=0; i < triangles.size(); i++) {
-                std::cout<<triangles[i]<<std::endl;
-            }
+            // for(int i=0; i < triangles.size(); i++) {
+            //     std::cout<<triangles[i]<<std::endl;
+            // }
 
-            for(int i=0; i < quadrilaterals.size(); i++) {
-                std::cout<<quadrilaterals[i]<<std::endl;
-            }
+            // for(int i=0; i < quadrilaterals.size(); i++) {
+            //     std::cout<<quadrilaterals[i]<<std::endl;
+            // }
 
-            for(int i=0; i < ngons.size(); i++) {
-                std::cout<<ngons[i]<<std::endl;
-            }
+            // for(int i=0; i < ngons.size(); i++) {
+            //     std::cout<<ngons[i]<<std::endl;
+            // }
 
             file.close();
             return true;
