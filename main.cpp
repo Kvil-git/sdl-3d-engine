@@ -1,51 +1,38 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <vector>
-#include "Shared/Window/Window.h"
+#include <math.h>
+#include <algorithm>
+#include <string>
+
 #include "EngineMath/Vector.h"
-#include "Shared/Enums/Colors.h"
 #include "EngineMath/Matrix.h"
 #include "EngineMath/Polygon3D.h"
 #include "EngineMath/Vertex.h"
-#include <math.h>
 #include "EngineMath/ModelLoader.h"
-#include <string>
 #include "EngineMath/OutputFunctions.h"
-#include <algorithm>
+
+#include "Shared/Window/Window.h"
+#include "Shared/Enums/Colors.h"
+
+#include "Shared/Enums/Constants.h"
+
 
 using Triangle = Polygon3D<float, 3>;
 using Vertex3F = Vertex3<float>;
 
 int main(){
     float width = 800.0f, height = 600.0f;
-
-    float nearPlane = 0.1f;
-    float farPlane = 1000.0f;
     float fov = 90.0f;
     float fovInRadians = 1.0f / tanf(fov * 0.5f * 3.14159f / 180.0f);
     float aspectRatio = width / height;
 
-    float q = 1 / (farPlane - nearPlane);
 
     Matrix<float, 4, 4> projectionMatrix = {
-        aspectRatio * fovInRadians,    0.0f,               0.0f,                         0.0f,
-        0.0f,                          fovInRadians,       0.0f,                         0.0f, 
-        0.0f,                          0.0f,               (farPlane + nearPlane) * q,   1.0f, 
-        0.0f,                          0.0f,               -2 * farPlane * q,            0.0f
-    };
-
-    Matrix<float,4,4> translationToWorldCenter = {
-        1, 0, 0, -0.5,
-        0, 1, 0, -0.5,
-        0, 0, 1, -0.5,
-        0, 0, 0, 1
-    };
-
-    Matrix<float,4,4> translationToWorldCenterInverse = {
-        1, 0, 0, 0.5,
-        0, 1, 0, 0.5,
-        0, 0, 1, 0.5,
-        0, 0, 0, 1
+        aspectRatio * fovInRadians,    0.0f,               0.0f,                           0.0f,
+        0.0f,                          fovInRadians,       0.0f,                           0.0f, 
+        0.0f,                          0.0f,               Constants::Projection::r,       1.0f, 
+        0.0f,                          0.0f,               Constants::Projection::k,       0.0f
     };
 
 
@@ -138,7 +125,7 @@ int main(){
             0.0f, 0.0f, 0.0f, 1.0f,
         };
 
-        Matrix<float, 4, 4> worldMatrix = translationToWorldCenterInverse * rotationMatrix_Z * rotationMatrix_Y * rotationMatrix_X * translationToWorldCenter;
+        Matrix<float, 4, 4> worldMatrix = Constants::Matrices::translationToWorldCenterInverse * rotationMatrix_Z * rotationMatrix_Y * rotationMatrix_X * Constants::Matrices::translationToWorldCenter;
         
         Matrix<float, 4, 4> combinedTransformation = projectionMatrix * translationMatrix * worldMatrix;
         
