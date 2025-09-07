@@ -14,7 +14,10 @@
 template<typename ComponentType, int SideCount>
 struct Polygon2D {
     using Vector2 = Vector<ComponentType, 2>;
+    
     std::array<Vector2, SideCount> vertices;
+
+
     void operator= (const Polygon2D &other){
         vertices = other.vertices;
     }
