@@ -7,7 +7,7 @@
 #include <string>
 #include "Material.h"
 #include "Model.h"
-#include "StringFunctions.cpp"
+#include "StringFunctions.h"
 #include "OutputFunctions.h"
 
 template <typename ComponentType>
