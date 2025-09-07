@@ -37,7 +37,7 @@ int main(){
 
 
     ModelLoader<float> loader;
-    if(!loader.LoadFromObj("assets/models/rizzard.obj")){
+    if(!loader.LoadFromObj("assets/models/cube.obj")){
         std::cerr<<"oshibka stop 000000000"<<std::endl;
     }
 
@@ -175,14 +175,18 @@ int main(){
         for(int i=0; i<windows.size(); i++){
             windows[i].renderer2D->SetDrawColor(Colors::Black);
             windows[i].renderer2D->Clear();
-            windows[i].renderer2D->SetDrawColor(Colors::Blue);
 
             for(int t=0; t<projectedTriangles.size(); t++){
-                windows[i].renderer2D->DrawTriangle(projectedTriangles[t].vertices);
+                windows[i].renderer2D->SetDrawColor(Colors::Green);
+                windows[i].renderer2D->FillTriangle(projectedTriangles[t]);
+                windows[i].renderer2D->SetDrawColor(Colors::Blue);
+                windows[i].renderer2D->DrawTriangle(projectedTriangles[t]);
             }
 
             windows[i].renderer2D->Present();
         }
+
+
 
 
         SDL_Delay(100);

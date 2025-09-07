@@ -6,15 +6,18 @@
 #include <vector>
 #include <array>
 #include <math.h>
+#include <algorithm>
 #include "../../EngineMath/Vector.h"
 #include "../../EngineMath/Polygon.h"
 
+#include <iostream>
 
 
 class Renderer2D {
     using Color3 = Vector<uint8_t, 3>;
     using Color4 = Vector<uint8_t, 4>;
-    using Triangle = Polygon3D<float, 3>;
+    using Triangle2D = Polygon2D<float, 3>;
+    using Vector2 = Vector<float, 2>;
     private:
         SDL_Renderer* renderer;
         void PutCirclePoints(int xc, int yc, int x, int y){
@@ -28,7 +31,33 @@ class Renderer2D {
             DrawPoint(xc-y, yc-x);
         }
 
-        std::array<Triangle, 2> SplitTriangleToFlatTopAndBottom(Triangle triangleToSplit);
+        void FillFlatTopTriangle(const Vector2& v1, const Vector2& v2, const Vector2& v3) {
+            float invslope1 = (v3[0] - v1[0]) / (v3[1] - v1[1]);
+            float invslope2 = (v3[0] - v2[0]) / (v3[1] - v2[1]);
+
+            float curx1 = v1[0];
+            float curx2 = v2[0];
+
+            for (int scanlineY = static_cast<int>(v1[1]); scanlineY <= static_cast<int>(v3[1]); scanlineY++) {
+                DrawLine(static_cast<int>(curx1), scanlineY, static_cast<int>(curx2), scanlineY);
+                curx1 += invslope1;
+                curx2 += invslope2;
+            }
+        }
+
+        void FillFlatBottomTriangle(const Vector2& v1, const Vector2& v2, const Vector2& v3) {
+            float invslope1 = (v2[0] - v1[0]) / (v2[1] - v1[1]);
+            float invslope2 = (v3[0] - v1[0]) / (v3[1] - v1[1]);
+
+            float curx1 = v1[0];
+            float curx2 = v1[0];
+
+            for (int scanlineY = static_cast<int>(v1[1]); scanlineY <= static_cast<int>(v2[1]); scanlineY++) {
+                DrawLine(static_cast<int>(curx1), scanlineY, static_cast<int>(curx2), scanlineY);
+                curx1 += invslope1;
+                curx2 += invslope2;
+            }
+        }
 
     public:
         explicit Renderer2D(SDL_Renderer* sdlRenderer) : renderer(sdlRenderer) {}
@@ -173,18 +202,33 @@ class Renderer2D {
         }
 
         template <typename ComponentType>
-        void DrawTriangle(const std::array<Vector<ComponentType, 2>, 3>& points) {
-            if (points.size() < 2) return;
+        void DrawTriangle(const Polygon2D<ComponentType, 3> &triangle) {
+            if (triangle.vertices.size() < 2) return;
             
-            for (size_t i = 0; i < points.size() - 1; i++) {
-                DrawLine(points[i], points[i + 1]);
+            for (size_t i = 0; i < triangle.vertices.size() - 1; i++) {
+                DrawLine(triangle.vertices[i], triangle.vertices[i + 1]);
             }
-            DrawLine(points.back(), points.front());
+            DrawLine(triangle.vertices.back(), triangle.vertices.front());
         }
 
         template <typename ComponentType>
-        void FillTriangle(const std::array<Vector<ComponentType, 2>, 3>& points){
+        void FillTriangle(const Polygon2D<ComponentType, 3>& triangle) {
+            std::array<Vector2, 3> vertices = { triangle.vertices[0], triangle.vertices[1], triangle.vertices[2] };
+            std::sort(vertices.begin(), vertices.end(), [](const Vector2& a, const Vector2& b) {
+                return a[1] < b[1];
+            });
 
+            const Vector2 &v1 = vertices[0], &v2 = vertices[1], &v3 = vertices[2];
+            if (v2[1] == v3[1]) {
+                FillFlatTopTriangle(v1, v2, v3);
+            } else if (v1[1] == v2[1]) {
+                FillFlatBottomTriangle(v1, v2, v3);
+            } else {
+                float t = (v2[1] - v1[1]) / (v3[1] - v1[1]);
+                Vector2 v4 = v1 + (v3 - v1) * t;
+                FillFlatBottomTriangle(v1, v2, v4);
+                FillFlatTopTriangle(v2, v4, v3);
+            }
         }
                 
         

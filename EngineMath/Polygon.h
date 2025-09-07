@@ -47,6 +47,19 @@ struct Polygon2D {
         }
     }
 
+    Polygon2D(std::initializer_list<ComponentType> init) {
+        if (init.size() != SideCount) {
+            throw std::invalid_argument("Wrong number of arguments in initializer list");
+        }
+        std::copy(init.begin(), init.end(), vertices.begin());
+    }
+
+    template <typename... Args>
+    Polygon2D(Args... args) : vertices{ static_cast<Vector2>(args)... } {
+        static_assert(sizeof...(args) == SideCount, "Wrong number of arguments");
+        vertices = {static_cast<Vector2>(args)...};
+    }
+
     Polygon2D(){}
 };
 
