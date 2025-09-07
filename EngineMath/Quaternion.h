@@ -30,7 +30,7 @@ struct Quaternion {
         for(int i=0; i < 4; i++) components[i] = 0;
     }
 
-    Quaternion operator*(const Quaternion &other) {
+    Quaternion operator*(const Quaternion &other) const {
         static_assert(sizeof(ComponentType) > 0, "ComponentType must be a valid type.");
         ComponentType a1 = components[0];
         ComponentType b1 = components[1];
@@ -50,7 +50,7 @@ struct Quaternion {
         );
     }
 
-    Quaternion operator+(const Quaternion &other) {
+    Quaternion operator+(const Quaternion &other) const {
         static_assert(sizeof(ComponentType) > 0, "ComponentType must be a valid type.");
         Quaternion result = *this;
         for(int i=0; i < 4; i++) result.components[i] += other.components[i];
@@ -63,7 +63,7 @@ struct Quaternion {
         for(int i=0; i < 4; i++) components[i] = -components[i];
     }
 
-    Quaternion operator/(float scalar) {
+    Quaternion operator/(float scalar) const {
         static_assert(sizeof(ComponentType) > 0, "ComponentType must be a valid type.");
         Quaternion result = *this;
         for(int i=0; i < 4; i++) result.components[i] /= scalar;
@@ -75,7 +75,7 @@ struct Quaternion {
         for(int i=0; i < 4; i++) components[i] /= scalar;
     }
 
-    ComponentType SquaredLength() {
+    ComponentType SquaredLength() const {
         static_assert(sizeof(ComponentType) > 0, "ComponentType must be a valid type.");
         if (IsZero()) return 0;
         float sum = 0;
@@ -83,7 +83,7 @@ struct Quaternion {
         return sum;
     }
 
-    float Length() {
+    float Length() const {
         static_assert(sizeof(ComponentType) > 0, "ComponentType must be a valid type.");
         return sqrt(SquaredLength());
     }
