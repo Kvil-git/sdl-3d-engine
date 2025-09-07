@@ -64,7 +64,7 @@ struct Polygon3D {
         return normal;
     }
     
-    bool IsPointInTriangle(Vector<ComponentType, 2>& p, Vector<ComponentType, 2>& a, Vector<ComponentType, 2>& b, Vector<ComponentType, 2>& c) {
+    bool IsPointInTriangle(Vector<ComponentType, 2>& p, Vector<ComponentType, 2>& a, Vector<ComponentType, 2>& b, Vector<ComponentType, 2>& c) const {
         // Compute vectors
         Vector<ComponentType, 2> v0 = c - a;
         Vector<ComponentType, 2> v1 = b - a;
@@ -213,7 +213,7 @@ struct Polygon3D {
         normal = FindSurfaceNormal();
     }
 
-    Polygon3D CopyTransformedByMatrix4x4(const Matrix<ComponentType, 4, 4> &matrix){
+    Polygon3D CopyTransformedByMatrix4x4(const Matrix<ComponentType, 4, 4> &matrix) const {
         Polygon3D copy(*this);
         for (Vertex& vertex : copy.vertices) {
             // Convert to homogeneous coordinates
@@ -231,7 +231,7 @@ struct Polygon3D {
         return copy;
     }
 
-    Polygon2D<ComponentType, SideCount> ToPolygon2D(){
+    Polygon2D<ComponentType, SideCount> ToPolygon2D() const {
         Polygon2D<ComponentType, SideCount> output;
         for(int v=0; v<SideCount; v++){
             output.vertices[v] = Vector2(vertices[v].position[0], vertices[v].position[1]) ;
@@ -240,7 +240,7 @@ struct Polygon3D {
     }
 
     template<typename MatrixComponentType, int MatrixRows> // can only multiply by matrices with same width as dimensions of vectors
-    Polygon3D operator*(const Matrix<MatrixComponentType, MatrixRows, 3> &matrix){
+    Polygon3D operator*(const Matrix<MatrixComponentType, MatrixRows, 3> &matrix) const {
         Polygon3D copy = *this;
         for(Vertex vertex : copy.vertices){
             vertex *= matrix;
@@ -255,7 +255,7 @@ struct Polygon3D {
         }
     }
 
-    Vector3 FindSurfaceNormal() {
+    Vector3 FindSurfaceNormal() const {
         Vector3 side1 = vertices[1].position - vertices[0].position;
         Vector3 side2 = vertices[2].position - vertices[0].position;
         return (side1 % side2).Unit();
@@ -301,14 +301,14 @@ struct NGon3D {
     std::vector<Vertex> vertices;
     Vector3 normal;
 
-    Vector3 GetNormal(){
+    Vector3 GetNormal() const {
         if (normal.SquaredComponentSum() < 1e-10f) {
             normal = FindSurfaceNormal();
         }
         return normal;
     }
 
-    Vector3 FindSurfaceNormal() {
+    Vector3 FindSurfaceNormal() const {
         Vector3 side1 = vertices[1].position - vertices[0].position;
         Vector3 side2 = vertices[2].position - vertices[0].position;
         return (side1 % side2).Unit();
