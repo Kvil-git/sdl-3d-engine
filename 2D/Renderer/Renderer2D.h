@@ -7,12 +7,14 @@
 #include <array>
 #include <math.h>
 #include "../../EngineMath/Vector.h"
+#include "../../EngineMath/Polygon.h"
 
 
 
 class Renderer2D {
     using Color3 = Vector<uint8_t, 3>;
     using Color4 = Vector<uint8_t, 4>;
+    using Triangle = Polygon3D<float, 3>;
     private:
         SDL_Renderer* renderer;
         void PutCirclePoints(int xc, int yc, int x, int y){
@@ -25,6 +27,9 @@ class Renderer2D {
             DrawPoint(xc+y, yc-x);
             DrawPoint(xc-y, yc-x);
         }
+
+        std::array<Triangle, 2> SplitTriangleToFlatTopAndBottom(Triangle triangleToSplit);
+
     public:
         explicit Renderer2D(SDL_Renderer* sdlRenderer) : renderer(sdlRenderer) {}
         

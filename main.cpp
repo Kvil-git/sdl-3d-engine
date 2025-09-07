@@ -7,7 +7,7 @@
 
 #include "EngineMath/Vector.h"
 #include "EngineMath/Matrix.h"
-#include "EngineMath/Polygon3D.h"
+#include "EngineMath/Polygon.h"
 #include "EngineMath/Vertex.h"
 #include "EngineMath/ModelLoader.h"
 #include "EngineMath/OutputFunctions.h"
@@ -37,7 +37,7 @@ int main(){
 
 
     ModelLoader<float> loader;
-    if(!loader.LoadFromObj("assets/models/cube.obj")){
+    if(!loader.LoadFromObj("assets/models/rizzard.obj")){
         std::cerr<<"oshibka stop 000000000"<<std::endl;
     }
 

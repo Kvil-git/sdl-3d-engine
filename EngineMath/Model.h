@@ -1,7 +1,7 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "Polygon3D.h"
+#include "Polygon.h"
 #include "Vertex.h"
 #include "Material.h"
 #include <vector>

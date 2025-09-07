@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Polygon3D.h"
+#include "Polygon.h"
 #include "Model.h"
 #include <typeinfo>
 
