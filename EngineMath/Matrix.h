@@ -11,7 +11,7 @@ struct Matrix {
     std::array<ElementType, Rows*Columns> elements;
 
     // Matrix addition
-    MatrixNxM operator+(const MatrixNxM &other) {
+    MatrixNxM operator+(const MatrixNxM &other) const {
         static_assert(Rows > 0 && Columns > 0, "Matrix addition is not defined for zero-dimensional matrices.");
         MatrixNxM temp;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] = elements[i] + other.elements[i];
@@ -25,7 +25,7 @@ struct Matrix {
     }
 
     // Matrix subtraction
-    MatrixNxM operator-(const MatrixNxM &other) {
+    MatrixNxM operator-(const MatrixNxM &other) const {
         static_assert(Rows > 0 && Columns > 0, "Matrix subtraction is not defined for zero-dimensional matrices.");
         MatrixNxM temp;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] = elements[i] - other.elements[i];
@@ -39,15 +39,13 @@ struct Matrix {
     }
 
     // Matrix negation
-    MatrixNxM operator-() {
+    void operator-() {
         static_assert(Rows > 0 && Columns > 0, "Matrix negation is not defined for zero-dimensional matrices.");
-        MatrixNxM temp;
-        for(int i=0; i < Rows * Columns; i++) temp.elements[i] = -elements[i];
-        return temp;
+        for(int i=0; i < Rows * Columns; i++) elements[i] = -elements[i];
     }
 
     // Matrix-scalar addition
-    template<typename scalarType> MatrixNxM operator+(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator+(const scalarType &scalar) const {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar addition is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] += scalar;
@@ -55,7 +53,7 @@ struct Matrix {
     }
 
     // Matrix-scalar subtraction
-    template<typename scalarType> MatrixNxM operator-(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator-(const scalarType &scalar) const {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar subtraction is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] -= scalar;
@@ -63,7 +61,7 @@ struct Matrix {
     }
 
     // Matrix-scalar multiplication
-    template<typename scalarType> MatrixNxM operator*(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator*(const scalarType &scalar) const {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar multiplication is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] *= scalar;
@@ -77,7 +75,7 @@ struct Matrix {
     }
 
     // Matrix-scalar division
-    template<typename scalarType> MatrixNxM operator/(const scalarType &scalar) {
+    template<typename scalarType> MatrixNxM operator/(const scalarType &scalar) const {
         static_assert(Rows > 0 && Columns > 0, "Matrix-scalar division is not defined for zero-dimensional matrices.");
         MatrixNxM temp = *this;
         for(int i=0; i < Rows * Columns; i++) temp.elements[i] /= scalar;
@@ -92,7 +90,7 @@ struct Matrix {
 
     // Matrix-matrix multiplication
     template<size_t OtherColumns>
-    Matrix<ElementType, Rows, OtherColumns> operator*(const Matrix<ElementType, Columns, OtherColumns> &other) {
+    Matrix<ElementType, Rows, OtherColumns> operator*(const Matrix<ElementType, Columns, OtherColumns> &other) const {
         static_assert(Rows > 0 && Columns > 0 && OtherColumns > 0, "Matrix-matrix multiplication is not defined for zero-dimensional matrices.");
         Matrix<ElementType, Rows, OtherColumns> temp;
         for(int i=0; i < Rows; i++) {
