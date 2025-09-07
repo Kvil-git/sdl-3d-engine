@@ -167,7 +167,7 @@ struct Vector {
         return sqrt(this->SquaredComponentSum());
     }
 
-    double Mangitude() const {
+    double Magnitude() const {
         return this->Length();
     }
 
@@ -183,7 +183,7 @@ struct Vector {
         return this->SquaredComponentSum();
     }
 
-    ComponentType MangitudeSquared() const {
+    ComponentType MagnitudeSquared() const {
         return this->SquaredComponentSum();
     }
 
