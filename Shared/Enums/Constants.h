@@ -15,14 +15,14 @@ namespace Constants{
     }
 
     namespace Matrices{
-        const Matrix<float,4,4> translationToWorldCenter = {
+        inline const Matrix<float,4,4> translationToWorldCenter = {
             1, 0, 0, -0.5,
             0, 1, 0, -0.5,
             0, 0, 1, -0.5,
             0, 0, 0, 1
         };
 
-        const Matrix<float,4,4> translationToWorldCenterInverse = {
+        inline const Matrix<float,4,4> translationToWorldCenterInverse = {
             1, 0, 0, 0.5,
             0, 1, 0, 0.5,
             0, 0, 1, 0.5,
