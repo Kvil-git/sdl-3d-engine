@@ -1,5 +1,5 @@
-#ifndef STRINGFUNCTIONS_CPP
-#define STRINGFUNCTIONS_CPP
+#ifndef STRINGFUNCTIONS_H
+#define STRINGFUNCTIONS_H
 
 #include <string>
 #include <vector>
