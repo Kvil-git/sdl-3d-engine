@@ -1,10 +1,9 @@
-#include <string>
-#include <vector>
-
-#include "Vector.h"
-
 #ifndef STRINGFUNCTIONS_CPP
 #define STRINGFUNCTIONS_CPP
+
+#include <string>
+#include <vector>
+#include "Vector.h"
 
 
 std::vector<std::string> Split(std::string str, std::string delimiter) {

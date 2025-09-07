@@ -1,8 +1,8 @@
-#include <math.h>
-#include <iostream>
-
 #ifndef QUATERNION_H
 #define QUATERNION_H
+
+#include <math.h>
+#include <iostream>
 
 template <typename ComponentType>
 struct Quaternion {
