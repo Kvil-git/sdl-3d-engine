@@ -154,9 +154,9 @@ int main(){
             windows[i].renderer2D->Clear();
 
             for(int t=0; t<projectedTriangles.size(); t++){
-                windows[i].renderer2D->SetDrawColor(Colors::Green);
+                windows[i].renderer2D->SetDrawColor(Colors::White);
                 windows[i].renderer2D->FillTriangle(projectedTriangles[t]);
-                windows[i].renderer2D->SetDrawColor(Colors::Blue);
+                windows[i].renderer2D->SetDrawColor(Colors::Black);
                 windows[i].renderer2D->DrawTriangle(projectedTriangles[t]);
             }
 
