@@ -38,7 +38,7 @@ int main(){
 
     ModelLoader<float> loader;
     if(!loader.LoadFromObj("assets/models/cube.obj")){
-        std::cerr<<"oshibka stop 000000000"<<std::endl;
+        std::cerr<<"error loading model from obj file"<<std::endl;
     }
 
 
