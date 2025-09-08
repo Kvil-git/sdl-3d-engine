@@ -17,6 +17,8 @@
 
 #include "Shared/Enums/Constants.h"
 
+#include "Shared/MathFunctions/MathFunctions.h"
+
 
 using Triangle = Polygon3D<float, 3>;
 using Vertex3F = Vertex3<float>;
@@ -92,41 +94,16 @@ int main(){
         float xAngle = 1.0f + t;
         float yAngle = 2.0f + t * 0.2;
         float zAngle = 1.5f + t * 0.2;
-
-        Matrix<float, 4, 4> rotationMatrix_X = {
-            1.0f,    0.0f,           0.0f,       0.0f,
-            0.0f,    cos(xAngle),   -sin(xAngle), 0.0f,
-            0.0f,    sin(xAngle),    cos(xAngle), 0.0f,
-            0.0f,    0.0f,           0.0f,       1.0f
-        };
-
-        Matrix<float, 4, 4> rotationMatrix_Y = {
-            cos(yAngle),     0.0f,           sin(yAngle),        0.0f,
-            0.0f,            1.0f,           0.0f,               0.0f,
-            -sin(yAngle),    0.0f,           cos(yAngle),        0.0f,
-            0.0f,            0.0f,           0.0f,               1.0f
-        };
         
-        Matrix<float, 4, 4> rotationMatrix_Z = {
-            cos(zAngle),  -sin(zAngle),   0.0f,      0.0f,
-            sin(zAngle),   cos(zAngle),   0.0f,      0.0f,
-            0.0f,          0.0f,          1.0f,      0.0f,
-            0.0f,          0.0f,          0.0f,      1.0f
-        };
+        
+        Matrix<float, 4, 4> rotationMatrix = MathFunctions::Matrices::CreateRotationMatrix(xAngle, yAngle, zAngle); 
 
 
 
         float translateX = 0.0f, translateY = 0.0f, translateZ = 15.0f;
 
-        Matrix<float, 4, 4> translationMatrix = {
-            1.0f, 0.0f, 0.0f, translateX,
-            0.0f, 1.0f, 0.0f, translateY,
-            0.0f, 0.0f, 1.0f, translateZ,
-            0.0f, 0.0f, 0.0f, 1.0f,
-        };
-
-        Matrix<float, 4, 4> worldMatrix = Constants::Matrices::translationToWorldCenterInverse * rotationMatrix_Z * rotationMatrix_Y * rotationMatrix_X * Constants::Matrices::translationToWorldCenter;
-        
+        Matrix<float, 4, 4> translationMatrix = MathFunctions::Matrices::CreateTranslationMatrix(translateX, translateY, translateZ);
+        Matrix<float, 4, 4> worldMatrix = Constants::Matrices::translationToWorldCenterInverse * rotationMatrix * Constants::Matrices::translationToWorldCenter;
         Matrix<float, 4, 4> combinedTransformation = projectionMatrix * translationMatrix * worldMatrix;
         
 
