@@ -98,73 +98,18 @@ int main(){
         
         Matrix<float, 4, 4> rotationMatrix = MathFunctions::Matrices::CreateRotationMatrix(xAngle, yAngle, zAngle); 
 
-
-
         float translateX = 0.0f, translateY = 0.0f, translateZ = 15.0f;
 
         Matrix<float, 4, 4> translationMatrix = MathFunctions::Matrices::CreateTranslationMatrix(translateX, translateY, translateZ);
         Matrix<float, 4, 4> worldMatrix = Constants::Matrices::translationToWorldCenterInverse * rotationMatrix * Constants::Matrices::translationToWorldCenter;
         Matrix<float, 4, 4> combinedTransformation = projectionMatrix * translationMatrix * worldMatrix;
         
-
-        std::vector<Polygon2D<float, 3>> projectedTriangles;
-
-        auto sortingCriteria = [](Triangle& one, Triangle& two){
-            float z1 = (one.vertices[0].position[2] + one.vertices[1].position[2] + one.vertices[2].position[2]) / 3.0f;
-            float z2 = (two.vertices[0].position[2] + two.vertices[1].position[2] + two.vertices[2].position[2]) / 3.0f;
-            return z1 < z2;
-        };
-
-        std::sort(loader.triangles.begin(), loader.triangles.end(), sortingCriteria);
-        std::sort(triangulatedTris.begin(), triangulatedTris.end(), sortingCriteria);
-
-        for(auto triangle : loader.triangles){
-            Triangle transformed = triangle.CopyTransformedByMatrix4x4(combinedTransformation);
-            Vector<float,3> normal = transformed.GetNormal();
-            if (normal.SquaredComponentSum() < 1e-10f) {
-                continue; // skip degenerate triangle
-            }
-            if ((normal * (transformed.vertices[0].position - cameraCoordinates)) < -0.01f) continue;
-            
-            auto projected = transformed.ToPolygon2D();
-            projected *= 700.0f;
-            projected += Vector<float, 2>(width/2, height/2);
-
-            projectedTriangles.push_back(projected);
+        for(int i=0; i<2; i++){
+            windows[i].renderer3D->Clear();
+            windows[i].renderer3D->Render(loader.triangles, combinedTransformation, cameraCoordinates);
+            windows[i].renderer3D->Render(triangulatedTris, combinedTransformation, cameraCoordinates);
+            windows[i].renderer3D->Present();
         }
-        for(auto triangle : triangulatedTris){
-            Triangle transformed = triangle.CopyTransformedByMatrix4x4(combinedTransformation);
-
-            Vector<float,3> normal = transformed.GetNormal();
-            if (normal.SquaredComponentSum() < 1e-10f) {
-                continue; // skip degenerate triangle
-            }
-            if ((normal * (transformed.vertices[0].position - cameraCoordinates)) < -0.01f) continue;
-            
-            auto projected = transformed.ToPolygon2D();
-            projected *= 700.0f;
-            projected += Vector<float, 2>(width/2, height/2);
-
-            projectedTriangles.push_back(projected);
-        }
-
-
-        for(int i=0; i<windows.size(); i++){
-            windows[i].renderer2D->SetDrawColor(Colors::Black);
-            windows[i].renderer2D->Clear();
-
-            for(int t=0; t<projectedTriangles.size(); t++){
-                windows[i].renderer2D->SetDrawColor(Colors::White);
-                windows[i].renderer2D->FillTriangle(projectedTriangles[t]);
-                windows[i].renderer2D->SetDrawColor(Colors::Black);
-                windows[i].renderer2D->DrawTriangle(projectedTriangles[t]);
-            }
-
-            windows[i].renderer2D->Present();
-        }
-
-
-
 
         SDL_Delay(100);
         

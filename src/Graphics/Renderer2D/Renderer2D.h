@@ -10,8 +10,6 @@
 #include "../../Core/Math/Vector.h"
 #include "../../Core/Geometry/Polygon.h"
 
-#include <iostream>
-
 
 class Renderer2D {
     using Color3 = Vector<uint8_t, 3>;

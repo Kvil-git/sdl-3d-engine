@@ -9,6 +9,7 @@
                 "-g",
                 "main.cpp",
                 "Engine/Window/Window.cpp",
+                "Graphics/Renderer3D/Renderer3D.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lSDL2",
