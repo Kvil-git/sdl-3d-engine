@@ -42,7 +42,7 @@ struct Window {
                                                            renderer2D(nullptr) {};
         ~Window(){ 
             delete renderer2D;
-
+            delete renderer3D;
             SDL_DestroyRenderer(renderer);
             SDL_DestroyWindow(window);
         };
