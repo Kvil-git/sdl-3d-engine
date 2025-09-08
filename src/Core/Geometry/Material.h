@@ -1,9 +1,10 @@
-#include <string>
-#include <iostream>
-#include "Vector.h"
-
 #ifndef MATERIAL_H
 #define MATERIAL_H
+
+#include <string>
+#include <iostream>
+#include "../Math/Vector.h"
+
 
 template <typename ComponentType>
 struct Material {

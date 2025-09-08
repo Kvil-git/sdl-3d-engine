@@ -1,14 +1,18 @@
 #ifndef MODELLOADER_H
 #define MODELLOADER_H
 
+
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
-#include "Material.h"
-#include "Model.h"
-#include "StringFunctions.h"
-#include "OutputFunctions.h"
+
+#include "../../Core/Geometry/Material.h"
+#include "../../Core/Geometry/Model.h"
+#include "../../Core/Utilities/StringFunctions.h"
+#include "../../Core/Utilities/OutputFunctions.h"
+
+
 
 template <typename ComponentType>
 class ModelLoader {

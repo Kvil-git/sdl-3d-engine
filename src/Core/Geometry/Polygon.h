@@ -7,8 +7,8 @@
 #include <vector>
 #include <stdexcept>
 #include "Vertex.h"
-#include "Vector.h"
-#include "Matrix.h"
+#include "../Math/Vector.h"
+#include "../Math/Matrix.h"
 
 
 template<typename ComponentType, int SideCount>

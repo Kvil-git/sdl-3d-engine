@@ -3,7 +3,8 @@
 
 #include <SDL2/SDL.h>
 #include <string>
-#include "../../2D/Renderer/Renderer2D.h"
+#include "../../Graphics/Renderer2D/Renderer2D.h"
+#include "../../Graphics/Renderer3D/Renderer3D.h"
 
 struct Window {
     private:
@@ -18,6 +19,7 @@ struct Window {
 
     public:
         Renderer2D* renderer2D = nullptr;
+        Renderer3D* renderer3D = nullptr;
 
         bool Init();
         void HandleEvent(SDL_Event& event);

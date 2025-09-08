@@ -8,7 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "main.cpp",
-                "Shared/Window/Window.cpp",
+                "Engine/Window/Window.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lSDL2",

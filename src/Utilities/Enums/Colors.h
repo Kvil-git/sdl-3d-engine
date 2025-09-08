@@ -1,7 +1,9 @@
 #ifndef COLORS_H
 #define COLORS_H
-#include "../../EngineMath/Vector.h"
-#include "stdint.h"
+
+
+#include <stdint.h>
+#include "../../Core/Math/Vector.h"
 
 
 namespace Colors{

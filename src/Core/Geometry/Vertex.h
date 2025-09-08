@@ -2,7 +2,7 @@
 #define VERTEX_H
 
 #include <array>
-#include "Vector.h"
+#include "../Math/Vector.h"
 
 
 template <typename ComponentType>

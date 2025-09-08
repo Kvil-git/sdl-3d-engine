@@ -7,8 +7,8 @@
 #include <array>
 #include <math.h>
 #include <algorithm>
-#include "../../EngineMath/Vector.h"
-#include "../../EngineMath/Polygon.h"
+#include "../../Core/Math/Vector.h"
+#include "../../Core/Geometry/Polygon.h"
 
 #include <iostream>
 

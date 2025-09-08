@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Vector.h"
+#include "../Math/Vector.h"
 
 
 std::vector<std::string> Split(std::string str, std::string delimiter) {

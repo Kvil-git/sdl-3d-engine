@@ -5,19 +5,19 @@
 #include <algorithm>
 #include <string>
 
-#include "EngineMath/Vector.h"
-#include "EngineMath/Matrix.h"
-#include "EngineMath/Polygon.h"
-#include "EngineMath/Vertex.h"
-#include "EngineMath/ModelLoader.h"
-#include "EngineMath/OutputFunctions.h"
+#include "Core/Math/Vector.h"
+#include "Core/Math/Matrix.h"
+#include "Core/Geometry/Polygon.h"
+#include "Core/Geometry/Vertex.h"
+#include "Core/Utilities/OutputFunctions.h"
+#include "Resources/ModelLoader/ModelLoader.h"
 
-#include "Shared/Window/Window.h"
-#include "Shared/Enums/Colors.h"
+#include "Engine/Window/Window.h"
+#include "Utilities/Enums/Colors.h"
 
-#include "Shared/Enums/Constants.h"
+#include "Utilities/Enums/Constants.h"
 
-#include "Shared/MathFunctions/MathFunctions.h"
+#include "Utilities/MathFunctions/MathFunctions.h"
 
 
 using Triangle = Polygon3D<float, 3>;
@@ -39,7 +39,7 @@ int main(){
 
 
     ModelLoader<float> loader;
-    if(!loader.LoadFromObj("assets/models/cube.obj")){
+    if(!loader.LoadFromObj("../assets/models/cube.obj")){
         std::cerr<<"error loading model from obj file"<<std::endl;
     }
 

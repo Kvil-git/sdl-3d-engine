@@ -4,9 +4,11 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include "Polygon.h"
-#include "Model.h"
 #include <typeinfo>
+
+#include "../Geometry/Polygon.h"
+#include "../Geometry/Model.h"
+
 
 template<typename Type>
 std::ostream& operator<<(std::ostream &os, const std::vector<Type> &vector){
