@@ -105,7 +105,7 @@ struct Polygon3D {
         return (u >= -epsilon) && (v >= -epsilon) && (u + v <= 1 + epsilon);
     }
 
-    std::vector<Polygon3D<ComponentType, 3>> Triangulate() {
+    std::vector<Polygon3D<ComponentType, 3>> Triangulate() const {
         std::vector<Polygon3D<ComponentType, 3>> triangles;
         if (SideCount < 3) return triangles;
 
