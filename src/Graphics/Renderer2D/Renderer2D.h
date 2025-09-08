@@ -32,30 +32,44 @@ class Renderer2D {
         }
 
         void FillFlatTopTriangle(const Vector2& v1, const Vector2& v2, const Vector2& v3) {
-            float invslope1 = (v3[0] - v1[0]) / (v3[1] - v1[1]);
-            float invslope2 = (v3[0] - v2[0]) / (v3[1] - v2[1]);
+            float m1 = (v3[0] - v1[0]) / (v3[1] - v1[1]);
+            float m2 = (v3[0] - v2[0]) / (v3[1] - v2[1]);
 
-            float curx1 = v1[0];
-            float curx2 = v2[0];
+            int yStart = static_cast<int>(std::ceil(v1[1]));
+            int yEnd = static_cast<int>(std::floor(v3[1]));
 
-            for (int scanlineY = static_cast<int>(v1[1]); scanlineY <= static_cast<int>(v3[1]); scanlineY++) {
-                DrawLine(static_cast<int>(curx1), scanlineY, static_cast<int>(curx2), scanlineY);
-                curx1 += invslope1;
-                curx2 += invslope2;
+            float x1 = v1[0] + (yStart - v1[1]) * m1;
+            float x2 = v2[0] + (yStart - v2[1]) * m2;
+
+            for (int y = yStart; y <= yEnd; y++) {
+                int startX = static_cast<int>(std::round(x1));
+                int endX = static_cast<int>(std::round(x2));
+                if (startX > endX) std::swap(startX, endX);
+                
+                DrawLine(startX, y, endX, y);
+                x1 += m1;
+                x2 += m2;
             }
         }
 
         void FillFlatBottomTriangle(const Vector2& v1, const Vector2& v2, const Vector2& v3) {
-            float invslope1 = (v2[0] - v1[0]) / (v2[1] - v1[1]);
-            float invslope2 = (v3[0] - v1[0]) / (v3[1] - v1[1]);
+            float m1 = (v2[0] - v1[0]) / (v2[1] - v1[1]);
+            float m2 = (v3[0] - v1[0]) / (v3[1] - v1[1]);
 
-            float curx1 = v1[0];
-            float curx2 = v1[0];
+            int yStart = static_cast<int>(std::ceil(v1[1]));
+            int yEnd = static_cast<int>(std::floor(v2[1]));
 
-            for (int scanlineY = static_cast<int>(v1[1]); scanlineY <= static_cast<int>(v2[1]); scanlineY++) {
-                DrawLine(static_cast<int>(curx1), scanlineY, static_cast<int>(curx2), scanlineY);
-                curx1 += invslope1;
-                curx2 += invslope2;
+            float x1 = v1[0] + (yStart - v1[1]) * m1;
+            float x2 = v1[0] + (yStart - v1[1]) * m2;
+
+            for (int y = yStart; y <= yEnd; y++) {
+                int xStart = static_cast<int>(std::round(x1));
+                int xEnd = static_cast<int>(std::round(x2));
+                if (xStart > xEnd) std::swap(xStart, xEnd);
+                
+                DrawLine(xStart, y, xEnd, y);
+                x1 += m1;
+                x2 += m2;
             }
         }
 
