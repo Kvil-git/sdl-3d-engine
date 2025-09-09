@@ -6,7 +6,7 @@
 #include "../Math/Vector.h"
 
 
-std::vector<std::string> Split(std::string str, std::string delimiter) {
+inline std::vector<std::string> Split(std::string str, std::string delimiter) {
     std::vector<std::string> words;
     size_t pos = 0;
     std::string word;
@@ -21,7 +21,7 @@ std::vector<std::string> Split(std::string str, std::string delimiter) {
 
 
 template<typename ComponentType, size_t Dimensions>
-Vector<ComponentType, Dimensions> StringToVector(std::string str, int firstWordIndex = 0, std::string delimiter = " ") {
+inline  Vector<ComponentType, Dimensions> StringToVector(std::string str, int firstWordIndex = 0, std::string delimiter = " ") {
     std::vector<std::string> words = Split(str, delimiter);
     ComponentType components[Dimensions];
     for(int i=0; i < Dimensions; i++) {
@@ -32,12 +32,12 @@ Vector<ComponentType, Dimensions> StringToVector(std::string str, int firstWordI
 }
 
 
-bool StartsWith(std::string str, std::string prefix) {
+inline bool StartsWith(std::string str, std::string prefix) {
     return str.size() >= prefix.size() && str.compare(0, prefix.size(), prefix) == 0;
 }
 
 
-bool EndsWith(std::string str, std::string suffix) {
+inline bool EndsWith(std::string str, std::string suffix) {
     return str.size() >= suffix.size() && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
