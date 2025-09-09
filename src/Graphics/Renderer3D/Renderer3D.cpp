@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Renderer3D.h"
 #include "../../Core/Math/Vector.h"
-#include "../../Utilities/Enums/Colors.h"
+#include "../../Enums/Colors.h"
 
 void Renderer3D::Render(const std::vector<Triangle3D> &triangles, const Matrix<float, 4, 4> &transformationMatrix, const Vector<float, 3>& cameraPosition){
 

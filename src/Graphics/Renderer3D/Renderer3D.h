@@ -6,7 +6,6 @@
 #include "../Renderer2D/Renderer2D.h"
 #include "../../Core/Geometry/Polygon.h"
 #include "../../Core/Math/Matrix.h"
-#include "../../Utilities/Enums/Colors.h"
 
 
 class Renderer3D {

@@ -3,7 +3,7 @@
 
 
 #include <stdint.h>
-#include "../../Core/Math/Vector.h"
+#include "../Core/Math/Vector.h"
 
 
 namespace Colors{

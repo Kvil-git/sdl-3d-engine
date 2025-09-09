@@ -7,14 +7,15 @@
 
 #include "../../Core/Math/Vector.h"
 #include "../../Core/Math/Matrix.h"
+#include "../../Core/Utilities/MathFunctions.h"
+
+#include "../../Enums/Colors.h"
+#include "../../Enums/Constants.h"
 
 #include "../../Engine/Window/Window.h"
-#include "../../Utilities/Enums/Colors.h"
 #include "../../Engine/Clock/Clock.h"
 
-#include "../../Utilities/Enums/Constants.h"
 
-#include "../../Utilities/MathFunctions/MathFunctions.h"
 
 bool Scene::LoadModel(const std::string &path){
 
@@ -69,9 +70,6 @@ Matrix<float, 4, 4> Scene::GetFinalTransformationMatrix(){
 }
 
 Scene::Scene(){
-
-    Update();
-
     float width = 800.0f, height = 600.0f;
     float fov = 90.0f;
     float fovInRadians = 1.0f / tanf(fov * 0.5f * 3.14159f / 180.0f);
@@ -84,5 +82,8 @@ Scene::Scene(){
         0.0f,                          0.0f,               Constants::Projection::r,       1.0f, 
         0.0f,                          0.0f,               Constants::Projection::k,       0.0f
     };
+
+
+    Update();
 
 }

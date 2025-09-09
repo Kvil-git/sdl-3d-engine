@@ -1,7 +1,7 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
-#include "../../Core/Math/Matrix.h"
+#include "../Core/Math/Matrix.h"
 
 namespace Constants{
     namespace Projection{
