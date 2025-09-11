@@ -21,6 +21,9 @@ bool Engine::Initialize(){
 
     running = true;
 
+
+    camera.SubscribeToEvents(eventController);
+
     return true;
 }
 
@@ -28,7 +31,9 @@ bool Engine::Initialize(){
 void Engine::Update(){
     Clock &clock = Clock::GetInstance();
     clock.Update();
+    inputHandler.Update();
     scene.Update();
+    camera.Update(clock.GetDeltaTime());
 }
 
 
@@ -39,7 +44,6 @@ void Engine::Run(){
     float t = 0.0f;
     running = true;
     SDL_Event event;
-
     
     scene.LoadModel("../assets/models/rizzard.obj");
     scene.Update();
@@ -54,15 +58,19 @@ void Engine::Run(){
             for(int i=0; i<windows.size(); i++){
                 windows[i].HandleEvent(event);
             }
+
+            inputHandler.AddEventToProcessingQueue(event);
         }
 
         Update();
+        
+        Matrix<float, 4, 4> viewProjMatrix = camera.GetProjectionMatrix() * camera.GetViewMatrix();
 
         auto triangles = scene.GetTriangles();
 
         for(int i=0; i<2; i++) {
             windows[i].renderer3D->Clear();
-            windows[i].renderer3D->Render(triangles, scene.GetFinalTransformationMatrix(), Vector<float, 3>(0,0,0));
+            windows[i].renderer3D->Render(triangles, scene.GetFinalTransformationMatrix(), viewProjMatrix,  camera.GetPosition());
             windows[i].renderer3D->Present();
         }
 

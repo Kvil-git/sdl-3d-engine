@@ -133,6 +133,12 @@ struct Vector {
         return (*this) + (-other);
     }
 
+    // subtraction with assignment
+    void operator-=(const VectorN &other) {
+        static_assert(Dimensions > 0, "Vector addition is not defined for zero-dimensional vectors.");
+        for(int i=0; i < Dimensions; i++) components[i] -= other.components[i];
+    }
+
     // vector scaling
     template<typename scalarType> VectorN operator*(const scalarType &scalar) const {
         static_assert(Dimensions > 0, "Vector scaling is not defined for zero-dimensional vectors.");

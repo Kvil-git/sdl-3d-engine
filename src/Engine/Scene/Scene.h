@@ -12,7 +12,7 @@ class Scene {
     private:
         ModelLoader<float> modelLoader;
         std::vector<Triangle3D> triangles;
-        Matrix<float, 4, 4> worldMatrix, rotationMatrix, translationMatrix, projectionMatrix;
+        Matrix<float, 4, 4> worldMatrix, rotationMatrix, translationMatrix;
 
     public:
         Scene();

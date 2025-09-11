@@ -20,7 +20,8 @@ class Renderer3D {
                                                                                     windowWidth(windowWidth),
                                                                                     windowHeight(windowHeight){};
 
-        void Render(const std::vector<Triangle3D> &triangles, const Matrix<float, 4, 4> &viewProjectionMatrix, const Vector<float, 3>& cameraPosition);
+        void Render(const std::vector<Triangle3D> &triangles, const Matrix<float, 4, 4> &viewProjectionMatrix, 
+            const Matrix<float, 4, 4> &projectionMatrix, const Vector<float, 3>& cameraPosition);
         void SetDrawColor(const Color3& color) {
             renderer2D->SetDrawColor(color);
         }

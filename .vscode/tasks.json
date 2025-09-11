@@ -13,6 +13,8 @@
                 "Graphics/Renderer3D/Renderer3D.cpp",
                 "Engine/Scene/Scene.cpp",
                 "Engine/Clock/Clock.cpp",
+                "Engine/Camera/Camera.cpp",
+                "Engine/InputHandler/InputHandler.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}",
                 "-lSDL2",

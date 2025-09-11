@@ -7,6 +7,8 @@
 #include <functional>
 #include <vector>
 
+#include "../EventController/EventController.h"
+
 class InputHandler {
     private:
         bool keyStates[SDL_NUM_SCANCODES] = {0};
@@ -15,20 +17,27 @@ class InputHandler {
         
         int mouseX, mouseY;
         int mouseRelativeX, mouseRelativeY;
-        bool mouseButtonStates[5];
-        bool lastFrameMouseButtonStates[5];
+        bool mouseButtonStates[5 + 1] = {0};
+        bool lastFrameMouseButtonStates[5 + 1] = {0};
 
+
+        EventController& eventController;
         
-        InputHandler();
         InputHandler(const InputHandler&) = delete;
         InputHandler& operator=(const InputHandler&) = delete;
         
     public:
-        static InputHandler& GetInstance() {
-            static InputHandler instance;
-            return instance;
+        InputHandler(EventController& ec) : eventController(ec) {
+            for(int i = 0; i < SDL_NUM_SCANCODES; i++) {
+                keyStates[i] = false;
+                lastFrameKeyStates[i] = false;
+            }
+            for(int i = 0; i < 5; i++) {
+                mouseButtonStates[i] = false;
+                lastFrameMouseButtonStates[i] = false;
+            }
         }
-        
+
         void AddEventToProcessingQueue(const SDL_Event& event);
         void Update();
         
