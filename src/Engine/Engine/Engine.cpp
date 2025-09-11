@@ -41,11 +41,9 @@ void Engine::Run(){
     SDL_Event event;
 
     
-    scene.LoadModel("../assets/models/cube.obj");
+    scene.LoadModel("../assets/models/rizzard.obj");
     scene.Update();
 
-
-    //std::cout<<scene.GetTriangles()<<std::endl;
 
     while(running){
          while(SDL_PollEvent(&event) != 0){

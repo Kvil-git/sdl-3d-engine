@@ -88,17 +88,35 @@ struct Matrix {
         for(int i=0; i < Rows * Columns; i++) elements[i] /= scalar;
     }
 
+    inline ElementType operator()(int i, int j) const {
+        if (i >= Rows)
+            throw std::out_of_range("Row index out of range");
+        if (j >= Columns)
+            throw std::out_of_range("Column index out of range");
+        return elements[i * Columns + j];
+    }
+
+    // Non-const version for write access
+    inline ElementType& operator()(int i, int j) {
+        if (i >= Rows)
+            throw std::out_of_range("Row index out of range");
+        if (j >= Columns)
+            throw std::out_of_range("Column index out of range");
+        return elements[i * Columns + j];
+    }
+
     // Matrix-matrix multiplication
     template<size_t OtherColumns>
     Matrix<ElementType, Rows, OtherColumns> operator*(const Matrix<ElementType, Columns, OtherColumns> &other) const {
         static_assert(Rows > 0 && Columns > 0 && OtherColumns > 0, "Matrix-matrix multiplication is not defined for zero-dimensional matrices.");
         Matrix<ElementType, Rows, OtherColumns> temp;
-        for(int i=0; i < Rows; i++) {
-            for(int j=0; j < OtherColumns; j++) {
-                temp.elements[i * OtherColumns + j] = 0;
-                for(int k=0; k < Columns; k++) {
-                    temp.elements[i * OtherColumns + j] += elements[i * Columns + k] * other.elements[k * OtherColumns + j];
+        for (size_t i = 0; i < Rows; i++) {
+            for (size_t j = 0; j < OtherColumns; j++) {
+                ElementType sum = 0;
+                for (size_t k = 0; k < Columns; k++) {
+                    sum += (*this)(i, k) * other(k, j);
                 }
+                temp(i, j) = sum;
             }
         }
         return temp;
@@ -115,7 +133,7 @@ struct Matrix {
         static_assert(Rows > 0 && Columns > 0, "Nonzero matrix is not defined for zero-dimensional matrices.");
         for(int i=0; i < Rows; i++){
             for(int j=0; j < Columns; j++){
-                elements[i * Columns + j] = array[i][j];
+                (*this)(i, j) = array[i][j];
             }
         }
     }

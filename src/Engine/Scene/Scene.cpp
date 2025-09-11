@@ -26,11 +26,16 @@ bool Scene::LoadModel(const std::string &path){
     std::vector<Polygon3D<float, 3>> triangulatedTriangles;
     triangulatedTriangles.reserve(modelLoader.quadrilaterals.size() * 2);
 
+
     for(auto& quad : modelLoader.quadrilaterals){
-        for(auto& tri : quad.Triangulate()){
+        auto triangles = MathFunctions::Polygons::Triangulate<float, std::array<Vertex3<float>, 4>>(
+            quad.vertices, 
+            quad.GetNormal()
+        );
+        for(auto& tri : triangles){
             triangulatedTriangles.push_back(tri);
         }
-    }
+}
 
     triangles.reserve(modelLoader.triangles.size() + modelLoader.quadrilaterals.size() * 2);
 
@@ -47,11 +52,20 @@ bool Scene::LoadModel(const std::string &path){
 
 void Scene::Update(){
     
+    
     Clock &clock = Clock::GetInstance();
 
     float t = clock.GetCurrentTime() / 1000.0f;
 
     std::cout<<"t = "<<t<<std::endl;
+
+
+    static float cameraTime = 0.0f;
+    cameraTime += clock.GetDeltaTime();
+    float cameraZ = cosf(cameraTime) * 55.0f;
+    translationMatrix = MathFunctions::Matrices::CreateTranslationMatrix(0.0f, 0.0f, cameraZ + 15.0f);
+
+
 
     float xAngle = 1.0f + t;
     float yAngle = 2.0f + t * 0.2;
@@ -61,12 +75,11 @@ void Scene::Update(){
 
     
     rotationMatrix = MathFunctions::Matrices::CreateRotationMatrix(xAngle, yAngle, zAngle); 
-    translationMatrix = MathFunctions::Matrices::CreateTranslationMatrix(translateX, translateY, translateZ);
     worldMatrix = Constants::Matrices::translationToWorldCenterInverse * rotationMatrix * Constants::Matrices::translationToWorldCenter;
 }
 
 Matrix<float, 4, 4> Scene::GetFinalTransformationMatrix(){
-    return translationMatrix * worldMatrix;
+    return projectionMatrix * translationMatrix * worldMatrix;
 }
 
 Scene::Scene(){
@@ -75,14 +88,18 @@ Scene::Scene(){
     float fovInRadians = 1.0f / tanf(fov * 0.5f * 3.14159f / 180.0f);
     float aspectRatio = width / height;
 
+    float nearPlane = Constants::Projection::nearPlane;
+    float farPlane = Constants::Projection::farPlane;
+    float q = 1.0f / (farPlane - nearPlane);
+    float c = (farPlane + nearPlane) * q;
+    float d = -2 * farPlane * nearPlane * q;
 
-    Matrix<float, 4, 4> projectionMatrix = {
-        aspectRatio * fovInRadians,    0.0f,               0.0f,                           0.0f,
-        0.0f,                          fovInRadians,       0.0f,                           0.0f, 
-        0.0f,                          0.0f,               Constants::Projection::r,       1.0f, 
-        0.0f,                          0.0f,               Constants::Projection::k,       0.0f
+    projectionMatrix = {
+        aspectRatio * fovInRadians,   0.0f,              0.0f,         0.0f,
+        0.0f,                         fovInRadians,      0.0f,         0.0f,
+        0.0f,                         0.0f,              c,            d,
+        0.0f,                         0.0f,              1.0f,         0.0f
     };
-
 
     Update();
 
