@@ -194,11 +194,14 @@ struct Vector {
     }
 
     // dot product of two vectors
-    ComponentType operator*(const VectorN &other) const {
+    template<int OtherVectorDimensions>
+    ComponentType operator*(const Vector<ComponentType, OtherVectorDimensions> &other) const {
         static_assert(Dimensions > 0, "Dot product is not defined for zero-dimensional vectors.");
-        size_t size = Dimensions;
+        static_assert(OtherVectorDimensions > 0, "Dot product is not defined for zero-dimensional vectors.");
+        static_assert(OtherVectorDimensions >= Dimensions, "Vector B needs to have dimensions >= to those of Vector A for dot product");
+        
         ComponentType dotProduct = 0;
-        for(int i=0; i < size; i++) dotProduct+= components[i] * other.components[i];
+        for(int i=0; i < Dimensions; i++) dotProduct+= components[i] * other.components[i];
         return dotProduct;
     }
 
