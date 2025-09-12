@@ -37,8 +37,16 @@ void Renderer3D::Render(const std::vector<Triangle3D> &triangles, const Matrix<f
 
     for (const auto& transformed : transformedTriangles) {
         auto projected = transformed.ToPolygon2D();
-        projected *= 100.0f;
-        projected += Vector<float, 2>(this->windowWidth/2, windowHeight/2);
+        
+        for (int i = 0; i < 3; i++) {
+            float x = transformed.vertices[i].position[0];
+            float y = transformed.vertices[i].position[1];
+
+            x = (x + 1.0f) * 0.5f * windowWidth;
+            y = (y + 1.0f) * 0.5f * windowHeight;
+
+            projected.vertices[i] = Vector<float, 2>(x, y);
+        }
         
         renderer2D->SetDrawColor(Colors::White);
         renderer2D->FillTriangle(projected);
