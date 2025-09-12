@@ -21,15 +21,15 @@ class ModelLoader {
         using Quadrilateral = Polygon3D<ComponentType, 4>;
         using NGon = NGon3D<ComponentType>;
 
-        using Vertex3 = Vertex3<ComponentType>;
-        using Model = Model<ComponentType>;
-        using Material = Material<ComponentType>;
+        using VertexType = Vertex3<ComponentType>;
+        using ModelType = Model<ComponentType>;
+        using MaterialType = Material<ComponentType>;
         using Vector3 = Vector<ComponentType, 3>;
         using Vector2 = Vector<ComponentType, 2>;
 
     public:
-        std::vector<Model> models;
-        std::vector<Material> materials;
+        std::vector<ModelType> models;
+        std::vector<MaterialType> materials;
         std::vector<Triangle3> triangles;
         std::vector<Quadrilateral> quadrilaterals;
         std::vector<NGon> ngons;
@@ -72,7 +72,7 @@ class ModelLoader {
                     }
                     std::cout<<"\n\n\nOpening a material file\n\n\n";
 
-                    Material newMaterial;
+                    MaterialType newMaterial;
                     while(std::getline(materialFile, line)) {
                         if(line.empty() or line[0] == ' ') continue;
                         
@@ -122,7 +122,7 @@ class ModelLoader {
                 }
                 else if(lineWords[0] == "f") {
                     size_t vertexCount = lineWords.size() - 1;
-                    Vertex3 polygonVertices[vertexCount];
+                    VertexType polygonVertices[vertexCount];
                     for(int i=1; i <= vertexCount; i++) {
                         std::vector<std::string> faceWords = Split(lineWords[i], "/");
                         polygonVertices[i-1].position = verticePositions[std::stoi(faceWords[0]) - 1];
