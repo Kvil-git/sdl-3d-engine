@@ -74,18 +74,21 @@ void Camera::HandleMouseButton(const MouseButtonEvent& event) {
 
 void Camera::UpdateVectors() {
     direction.Normalize();
+    negativeDirection = -direction;
+
     right = (direction % up).Unit();
     up = (right % direction).Unit();
 }
 
 Matrix<float, 4, 4> Camera::GetViewMatrix() const {
     Vector<float, 3> target = position + direction;
+
     
     return {
-        right[0], right[1], right[2], - (position * right),
-        up[0], up[1], up[2], - (position * up),
-        -direction[0], -direction[1], -direction[2], position * direction,
-        0.0f, 0.0f, 0.0f, 1.0f
+        right[0],              right[1],                right[2],                negativePosition * right,
+        up[0],                 up[1],                   up[2],                   negativePosition * up,
+        negativeDirection[0],  negativeDirection[1],    negativeDirection[2],    position * direction,
+        0.0f,                  0.0f,                    0.0f,                    1.0f
     };
 }
 
@@ -105,15 +108,17 @@ Matrix<float, 4, 4> Camera::GetProjectionMatrix() const {
 
 void Camera::SetPosition(const Vector<float, 3> &newPosition) {
     position = newPosition;
+    negativePosition = -position;
 }
 
 void Camera::SetDirection(const Vector<float, 3> &newDirection) {
-    direction = newDirection.Unit();
-    UpdateVectors();
+    direction = newDirection;
+    UpdateVectors(); //this call normalizes the direction
 }
 
 void Camera::Move(const Vector<float, 3> &offset) {
     position += offset;
+    negativePosition = -position;
 }
 
 void Camera::Rotate(float yaw, float pitch) {

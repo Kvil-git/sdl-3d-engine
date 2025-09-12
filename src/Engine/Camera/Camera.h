@@ -19,10 +19,7 @@ private:
     bool moveDown = false;
     
 
-    Vector<float, 3> position;
-    Vector<float, 3> direction;
-    Vector<float, 3> up;
-    Vector<float, 3> right;
+    Vector<float, 3> position, direction, up, right, negativeDirection, negativePosition;
     
     float fov;
     float aspectRatio;
