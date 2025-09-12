@@ -92,12 +92,14 @@ Matrix<float, 4, 4> Camera::GetViewMatrix() const {
 Matrix<float, 4, 4> Camera::GetProjectionMatrix() const {
     float fovRad = 1.0f / tanf(fov * 0.5f * 3.14159f / 180.0f);
     float aspect = aspectRatio;
+
+    float q = 1.0f / (farPlane - nearPlane);
     
     return {
-        aspect * fovRad, 0.0f, 0.0f, 0.0f,
-        0.0f, fovRad, 0.0f, 0.0f,
-        0.0f, 0.0f, farPlane / (farPlane - nearPlane), - (farPlane * nearPlane) / (farPlane - nearPlane),
-        0.0f, 0.0f, 1.0f, 0.0f
+        aspect * fovRad,   0.0f,          0.0f,              0.0f,
+        0.0f,              fovRad,        0.0f,              0.0f,
+        0.0f,              0.0f,          farPlane * q,     -q * farPlane * nearPlane,
+        0.0f,              0.0f,          1.0f,              0.0f
     };
 }
 
